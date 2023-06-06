@@ -10,7 +10,7 @@ from main.db import db
 from main.exceptions import CUSTOM_EXCEPTIONS
 from main.exceptions.handlers import handle_exception
 from main.logger import ERROR, get_handler
-from main.modules import api
+from main.modules import api, jwt
 from main.utils import log_user_access
 
 
@@ -26,7 +26,7 @@ def get_app(env=None, config=None):
     CORS(app)
     api.init_app(app)
     db.init_app(app)
-    # jwt.init_app(app)
+    jwt.init_app(app)
     cache.init_app(app, config=config_by_name["cache"])
     Migrate(app, db)
 

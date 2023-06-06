@@ -6,6 +6,10 @@ class DepartmentSchema(Schema):
     dept_name = fields.String(required=True)
 
 
+class RoleSchema(Schema):
+    role_name = fields.String(required=True)
+
+
 class SignUpSchema(Schema):
     """
     In this schema we defined the required json for signup any user.
@@ -13,9 +17,7 @@ class SignUpSchema(Schema):
 
     first_name = fields.String()
     last_name = fields.String()
-    username = fields.String(required=True)
-    email = fields.Email(required=True)
-    role = fields.String(required=True, validate=OneOf(["user", "admin"]))  # noqa
+    email_address = fields.Email(required=True)
     password = fields.String(required=True, validate=Length(min=8))  # noqa
 
 

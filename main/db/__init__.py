@@ -41,9 +41,22 @@ class BaseModel(db.Model):
             return record.serialize()
         return None
 
+    @classmethod
+    def filter(cls, only_first=False, to_json=False, **filters):
+        query = cls.query.filter_by(**filters)
+        if not only_first:
+            records = query.all()
+            if to_json:
+                return [record.serialize() for record in records]
+            return [record for record in records]
+        record = query.first()
+        if to_json and record:
+            return record.serialize()
+        return None
+
 
     @classmethod
-    def filter(cls, filters_dict: dict, only_first=False):
+    def nested_filter(cls, filters_dict: dict, only_first=False):
         """
         To get filtered records.
         """

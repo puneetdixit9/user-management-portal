@@ -17,7 +17,7 @@ class User(BaseModel):
     manager_name = db.Column(db.String(100))
     employee_code = db.Column(db.String(100))
     email_address = db.Column(db.String(100))
-    password = db.Column(db.String(100))
+    password = db.Column(db.String(255))
     mobile_number = db.Column(db.String(100))
     status = db.Column(db.String(100))
     status_changed_by = db.Column(db.String(100))
@@ -25,9 +25,12 @@ class User(BaseModel):
     usage_count = db.Column(db.Integer)
     last_login_on = db.Column(db.Date)
     func_id = db.Column(db.BIGINT)
-    is_active = db.Column(db.Integer)
+    is_active = db.Column(db.Integer, default=1)
     role_id = db.Column(db.BIGINT, ForeignKey('role.role_id'))
     dept_id = db.Column(db.BIGINT, ForeignKey('department.dept_id'))
+
+    role = db.relationship("Role", backref=db.backref("user", lazy=True))
+    dept = db.relationship("Department", backref=db.backref("user", lazy=True))
 
 
 class UserRoleDeptMapping(BaseModel):
@@ -42,7 +45,7 @@ class UserRoleDeptMapping(BaseModel):
     user_id = db.Column(db.BIGINT, ForeignKey('user.user_id'))
     role_id = db.Column(db.BIGINT, ForeignKey('role.role_id'))
     dept_id = db.Column(db.BIGINT, ForeignKey('department.dept_id'))
-    is_active = db.Column(db.Integer)
+    is_active = db.Column(db.Integer, default=1)
 
 
 class Role(BaseModel):
@@ -54,7 +57,7 @@ class Role(BaseModel):
 
     role_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
     role_name = db.Column(db.String(100), unique=True)
-    is_active = db.Column(db.INTEGER)
+    is_active = db.Column(db.INTEGER, default=1)
 
 
 class FuncDept(BaseModel):
@@ -68,7 +71,7 @@ class FuncDept(BaseModel):
     dept_id = db.Column(db.BIGINT, ForeignKey('department.dept_id'))
     dept_name = db.Column(db.String(100))
     sub_function = db.Column(db.String(100))
-    is_active = db.Column(db.INTEGER)
+    is_active = db.Column(db.INTEGER, default=1)
 
 
 class Department(BaseModel):
@@ -79,5 +82,5 @@ class Department(BaseModel):
     __tablename__ = "department"
 
     dept_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    is_active = db.Column(db.INTEGER)
+    is_active = db.Column(db.INTEGER, default=1)
     dept_name = db.Column(db.String(100), unique=True)
