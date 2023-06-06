@@ -33,9 +33,14 @@ class BaseModel(db.Model):
         return [record.serialize() for record in records]
 
     @classmethod
-    def get(cls, _id) -> dict:
+    def get(cls, _id, to_json=False) -> dict or None:
         record = cls.query.get(_id)
-        return record.serialize()
+        if not to_json:
+            return record
+        if record and to_json:
+            return record.serialize()
+        return None
+
 
     @classmethod
     def filter(cls, filters_dict: dict, only_first=False):

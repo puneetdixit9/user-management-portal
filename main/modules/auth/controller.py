@@ -38,7 +38,10 @@ class DepartmentController:
         :param dept_id:
         :return:
         """
-        return Department.get(dept_id)
+        department = Department.get(dept_id, to_json=True)
+        if department:
+            return department
+        raise RecordNotFoundError(f"dept_id '{dept_id}' not found")
 
     @classmethod
     def update_department(cls, dept_id: int, data: dict) -> dict:
