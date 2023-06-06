@@ -1,5 +1,5 @@
-from marshmallow import Schema, ValidationError, fields, validates_schema
-from marshmallow.validate import Length, OneOf
+from marshmallow import Schema, fields
+from marshmallow.validate import Length
 
 
 class DepartmentSchema(Schema):
@@ -12,13 +12,27 @@ class RoleSchema(Schema):
 
 class SignUpSchema(Schema):
     """
-    In this schema we defined the required json for signup any user.
+    To validate signup request body.
     """
 
-    first_name = fields.String()
-    last_name = fields.String()
+    user_name = fields.String()
+    first_name = fields.String(required=True)
+    middle_name = fields.String()
+    last_name = fields.String(required=True)
+    manager_name = fields.String()
+    employee_code = fields.String()
     email_address = fields.Email(required=True)
     password = fields.String(required=True, validate=Length(min=8))  # noqa
+    mobile_number = fields.String()
+    status = fields.String()
+    status_changed_by = fields.String()
+    status_changed_on = fields.Date()
+    usage_count = fields.Integer()
+    last_login_on = fields.Date()
+    func_id = fields.Integer()
+    is_active = fields.Integer()
+    role_id = fields.Integer()
+    dept_id = fields.Integer()
 
 
 class LogInSchema(Schema):
@@ -26,14 +40,8 @@ class LogInSchema(Schema):
     In this schema we defined the required json to log in any user.
     """
 
-    username = fields.String()
-    email = fields.Email()
-    password = fields.String(required=True, validate=Length(min=8))  # noqa
-
-    @validates_schema
-    def validate_at_least_one_email_and_username(self, data, **kwargs):
-        if not data.get("email") and not data.get("username"):
-            raise ValidationError("At least one param is required from ['email', 'username']")
+    email_address = fields.Email(required=True)
+    password = fields.String(required=True)
 
 
 class UpdatePassword(Schema):

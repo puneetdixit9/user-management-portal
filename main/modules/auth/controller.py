@@ -128,12 +128,12 @@ class UserController:
         return user_id, error
 
     @classmethod
-    def get_current_auth_user(cls):
+    def get_current_user(cls):
         """
         Get current logged-in user.
         :return AuthUser:
         """
-        identity = JWTController.get_user_identity()
+        identity = cls.get_identity()
         return User.get(identity["user_id"])
 
     @classmethod
@@ -143,29 +143,39 @@ class UserController:
         :param update_password_data:
         :return dict, error_msg:
         """
-        auth_user = cls.get_current_auth_user()
-        if check_password_hash(auth_user.password, update_password_data["old_password"]):
-            if check_password_hash(auth_user.password, update_password_data["new_password"]):
+        user = cls.get_current_user()
+        if check_password_hash(user.password, update_password_data["old_password"]):
+            if check_password_hash(user.password, update_password_data["new_password"]):
                 return {}, "new password can not same as old password"
-            auth_user.update({"password": generate_password_hash(update_password_data["new_password"])})
-            return {"status": "success"}, ""
+            user.update({"password": generate_password_hash(update_password_data["new_password"])})
+            return {"status": "ok"}, ""
         return {}, "Old password is invalid"
 
     @classmethod
-    def get_token(cls, login_data: dict) -> [dict, str]:
+    def login(cls, login_data: dict) -> [dict, str]:
         """
         To get jwt bearer token on login
         :param login_data:
         :return dict:
         """
-        token = {}
+        token = dict()
+        error = str()
         user = User.filter(email_address=login_data["email_address"], only_first=True)
         if not user:
-            return token, f"user not found with '{login_data['email_address']}'."
+            error = f"user not found with '{login_data['email_address']}'."
 
         if check_password_hash(user.password, login_data["password"]):
-            return JWTController.get_access_and_refresh_token(user), ""
-        return token, "wrong password"
+            token = JWTController.get_access_and_refresh_token(user)
+        else:
+            error = "wrong password"
+        return token, error
+
+    @classmethod
+    def get_identity(cls):
+        """
+        To return the identity from token.
+        """
+        return JWTController.get_user_identity()
 
     @classmethod
     def logout(cls):

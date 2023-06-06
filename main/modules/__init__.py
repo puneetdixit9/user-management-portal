@@ -8,6 +8,4 @@ jwt = JWTManager()
 api = Api()
 
 jwt.token_in_blocklist_loader(JWTController.token_revoked_check)
-
-
 api.add_namespace(auth_namespace)

@@ -50,9 +50,10 @@ class BaseModel(db.Model):
                 return [record.serialize() for record in records]
             return [record for record in records]
         record = query.first()
-        if to_json and record:
-            return record.serialize()
-        return None
+        if to_json:
+            if record:
+                return record.serialize()
+        return record
 
 
     @classmethod
