@@ -65,7 +65,7 @@ class FuncDept(BaseModel):
     __tablename__ = "function_with_department"
 
     func_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    dept_id = db.Column(db.INTEGER, ForeignKey('department.dept_id'))
+    dept_id = db.Column(db.BIGINT, ForeignKey('department.dept_id'))
     dept_name = db.Column(db.String(100))
     sub_function = db.Column(db.String(100))
     is_active = db.Column(db.INTEGER)
