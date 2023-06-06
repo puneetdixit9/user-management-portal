@@ -10,13 +10,13 @@ class User(BaseModel):
     __tablename__ = "user"
 
     user_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    user_name = db.Column(db.String(100))
+    user_name = db.Column(db.String(100), unique=True)
     first_name = db.Column(db.String(100))
     middle_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     manager_name = db.Column(db.String(100))
-    employee_code = db.Column(db.String(100))
-    email_address = db.Column(db.String(100))
+    employee_code = db.Column(db.String(100), unique=True)
+    email_address = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(255))
     mobile_number = db.Column(db.String(100))
     status = db.Column(db.String(100))
