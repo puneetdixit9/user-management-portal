@@ -10,17 +10,17 @@ class User(BaseModel):
     __tablename__ = "user"
 
     user_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    user_name = db.Column(db.String)
-    first_name = db.Column(db.String)
-    middle_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    manager_name = db.Column(db.String)
-    employee_code = db.Column(db.String)
-    email_address = db.Column(db.String)
-    password = db.Column(db.String)
-    mobile_number = db.Column(db.String)
-    status = db.Column(db.String)
-    status_changed_by = db.Column(db.String)
+    user_name = db.Column(db.String(100))
+    first_name = db.Column(db.String(100))
+    middle_name = db.Column(db.String(100))
+    last_name = db.Column(db.String(100))
+    manager_name = db.Column(db.String(100))
+    employee_code = db.Column(db.String(100))
+    email_address = db.Column(db.String(100))
+    password = db.Column(db.String(100))
+    mobile_number = db.Column(db.String(100))
+    status = db.Column(db.String(100))
+    status_changed_by = db.Column(db.String(100))
     status_changed_on = db.Column(db.Date)
     usage_count = db.Column(db.Integer)
     last_login_on = db.Column(db.Date)
@@ -53,7 +53,7 @@ class Role(BaseModel):
     __tablename__ = "role"
 
     role_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    role_name = db.Column(db.String, unique=True)
+    role_name = db.Column(db.String(100), unique=True)
     is_active = db.Column(db.INTEGER)
 
 
@@ -66,8 +66,8 @@ class FuncDept(BaseModel):
 
     func_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
     dept_id = db.Column(db.INTEGER, ForeignKey('department.dept_id'))
-    dept_name = db.Column(db.String)
-    sub_function = db.Column(db.String)
+    dept_name = db.Column(db.String(100))
+    sub_function = db.Column(db.String(100))
     is_active = db.Column(db.INTEGER)
 
 
@@ -80,4 +80,4 @@ class Department(BaseModel):
 
     dept_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
     is_active = db.Column(db.INTEGER)
-    dept_name = db.Column(db.String, unique=True)
+    dept_name = db.Column(db.String(100), unique=True)

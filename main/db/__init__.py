@@ -8,9 +8,9 @@ class BaseModel(db.Model):
     __abstract__ = True
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
-    created_by = db.Column(db.String)
+    created_by = db.Column(db.String(50))
     modified_on = db.Column(db.DateTime, default=None, onupdate=db.func.now())
-    modified_by = db.Column(db.String)
+    modified_by = db.Column(db.String(50))
 
     @classmethod
     def create(cls, data: dict) -> db.Model:
