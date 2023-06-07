@@ -1,8 +1,8 @@
-"""Initial Migrations
+"""Initital Migrations
 
-Revision ID: a25bbb0c24c5
+Revision ID: e97410d481e4
 Revises: 
-Create Date: 2023-06-06 17:45:11.383769
+Create Date: 2023-06-07 15:36:07.279839
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a25bbb0c24c5'
+revision = 'e97410d481e4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -75,7 +75,7 @@ def upgrade():
     sa.Column('last_name', sa.String(length=100), nullable=True),
     sa.Column('manager_name', sa.String(length=100), nullable=True),
     sa.Column('employee_code', sa.String(length=100), nullable=True),
-    sa.Column('email_address', sa.String(length=100), nullable=True),
+    sa.Column('email', sa.String(length=100), nullable=True),
     sa.Column('password', sa.String(length=255), nullable=True),
     sa.Column('mobile_number', sa.String(length=100), nullable=True),
     sa.Column('status', sa.String(length=100), nullable=True),
@@ -94,7 +94,7 @@ def upgrade():
     sa.ForeignKeyConstraint(['dept_id'], ['department.dept_id'], ),
     sa.ForeignKeyConstraint(['role_id'], ['role.role_id'], ),
     sa.PrimaryKeyConstraint('user_id'),
-    sa.UniqueConstraint('email_address'),
+    sa.UniqueConstraint('email'),
     sa.UniqueConstraint('employee_code'),
     sa.UniqueConstraint('user_name')
     )
