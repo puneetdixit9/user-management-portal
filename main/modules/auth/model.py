@@ -16,7 +16,7 @@ class User(BaseModel):
     last_name = db.Column(db.String(100))
     manager_name = db.Column(db.String(100))
     employee_code = db.Column(db.String(100), unique=True)
-    email_address = db.Column(db.String(100), unique=True)
+    email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(255))
     mobile_number = db.Column(db.String(100))
     status = db.Column(db.String(100))

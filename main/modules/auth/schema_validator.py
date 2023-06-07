@@ -16,12 +16,12 @@ class SignUpSchema(Schema):
     """
 
     user_name = fields.String()
-    first_name = fields.String(required=True)
+    first_name = fields.String()
     middle_name = fields.String()
-    last_name = fields.String(required=True)
+    last_name = fields.String()
     manager_name = fields.String()
     employee_code = fields.String()
-    email_address = fields.Email(required=True)
+    email = fields.Email(required=True)
     password = fields.String(required=True, validate=Length(min=8))  # noqa
     mobile_number = fields.String()
     status = fields.String()
@@ -40,7 +40,7 @@ class LogInSchema(Schema):
     In this schema we defined the required json to log in any user.
     """
 
-    email_address = fields.Email(required=True)
+    email = fields.Email(required=True)
     password = fields.String(required=True)
 
 

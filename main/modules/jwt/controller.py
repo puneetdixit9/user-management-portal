@@ -60,7 +60,7 @@ class JWTController:
         identity = {
             "user_id": user.user_id,
             "role": user.role.role_name if user.role else "",
-            "email": user.email_address
+            "email": user.email
         }
         return {
             "access_token": create_access_token(identity=identity),

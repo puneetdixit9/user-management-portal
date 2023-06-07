@@ -119,9 +119,9 @@ class UserController:
     def create_user(cls, user_data: dict):
         error = ""
         user_id = None
-        user = User.filter(email_address=user_data["email_address"], only_first=True)
+        user = User.filter(email=user_data["email"], only_first=True)
         if user:
-            error = f"user already exists with email : '{user_data['email_address']}'"
+            error = f"user already exists with email : '{user_data['email']}'"
         else:
             user_data["password"] = generate_password_hash(user_data["password"])
             user_id = User.create(user_data).user_id
@@ -152,7 +152,7 @@ class UserController:
         return {}, "Old password is invalid"
 
     @classmethod
-    def login(cls, login_data: dict) -> [dict, str]:
+    def login(cls, login_data: dict) -> (dict, str):
         """
         To get jwt bearer token on login
         :param login_data:
@@ -160,9 +160,9 @@ class UserController:
         """
         token = dict()
         error = str()
-        user = User.filter(email_address=login_data["email_address"], only_first=True)
+        user = User.filter(email=login_data["email"], only_first=True)
         if not user:
-            error = f"user not found with '{login_data['email_address']}'."
+            error = f"user not found with '{login_data['email']}'."
 
         if check_password_hash(user.password, login_data["password"]):
             token = JWTController.get_access_and_refresh_token(user)
