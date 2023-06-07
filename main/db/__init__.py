@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
+
 from main.utils import get_query_including_filters
+
 db = SQLAlchemy()
 
 
 class BaseModel(db.Model):
-
     __abstract__ = True
 
     created_on = db.Column(db.DateTime, server_default=db.func.now())
@@ -54,7 +55,6 @@ class BaseModel(db.Model):
             if record:
                 return record.serialize()
         return record
-
 
     @classmethod
     def nested_filter(cls, filters_dict: dict, only_first=False):

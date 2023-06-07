@@ -1,9 +1,6 @@
-import enum
-
-from sqlalchemy import or_
 from werkzeug.security import check_password_hash, generate_password_hash
-from main.exceptions import RecordNotFoundError
 
+from main.exceptions import RecordNotFoundError
 from main.modules.auth.model import Department, Role, User
 from main.modules.jwt.controller import JWTController
 
@@ -76,7 +73,6 @@ class FuncDeptController:
 
 
 class RoleController:
-
     @classmethod
     def add_roles(cls, roles: list[dict]) -> (list, list):
         ids = []
@@ -163,8 +159,7 @@ class UserController:
         user = User.filter(email=login_data["email"], only_first=True)
         if not user:
             error = f"user not found with '{login_data['email']}'."
-
-        if check_password_hash(user.password, login_data["password"]):
+        elif check_password_hash(user.password, login_data["password"]):
             token = JWTController.get_access_and_refresh_token(user)
         else:
             error = "wrong password"
