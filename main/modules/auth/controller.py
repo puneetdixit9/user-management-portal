@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from flask import g
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from main.exceptions import RecordNotFoundError
@@ -124,22 +127,13 @@ class UserController:
         return user_id, error
 
     @classmethod
-    def get_current_user(cls):
-        """
-        Get current logged-in user.
-        :return AuthUser:
-        """
-        identity = cls.get_identity()
-        return User.get(identity["user_id"])
-
-    @classmethod
     def update_user_password(cls, update_password_data: dict) -> (dict, str):
         """
         To update user password.
         :param update_password_data:
         :return dict, error_msg:
         """
-        user = cls.get_current_user()
+        user = g.user
         if check_password_hash(user.password, update_password_data["old_password"]):
             if check_password_hash(user.password, update_password_data["new_password"]):
                 return {}, "new password can not same as old password"
@@ -161,16 +155,17 @@ class UserController:
             error = f"user not found with '{login_data['email']}'."
         elif check_password_hash(user.password, login_data["password"]):
             token = JWTController.get_access_and_refresh_token(user)
+            user.update({"last_login_on": datetime.now()})
         else:
             error = "wrong password"
         return token, error
 
     @classmethod
-    def get_identity(cls):
+    def get_current_user_identity(cls):
         """
-        To return the identity from token.
+        To return the identity.
         """
-        return JWTController.get_user_identity()
+        return {"email": g.user.email, "role": g.user.role, "user_id": g.user.user_id}
 
     @classmethod
     def logout(cls):
@@ -180,11 +175,3 @@ class UserController:
         """
         blocked_token = JWTController.block_jwt_token()
         return {"msg": f"{blocked_token.type.capitalize()} token successfully revoked"}
-
-    @classmethod
-    def refresh_access_token(cls) -> dict:
-        """
-        To get a new access token using refresh token.
-        :return:
-        """
-        return JWTController.get_access_token_from_refresh_token()

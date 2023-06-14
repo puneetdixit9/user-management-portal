@@ -1,9 +1,21 @@
 from flask import jsonify, make_response, request
-from flask_jwt_extended import jwt_required
+
+# from flask_jwt_extended import jwt_required
 from flask_restx import Namespace, Resource
 
-from main.modules.auth.controller import DepartmentController, RoleController, UserController
-from main.modules.auth.schema_validator import LogInSchema, SignUpSchema, UpdatePassword, DepartmentSchema, RoleSchema
+from main.decorators.token_from_cookie import verify_token
+from main.modules.auth.controller import (
+    DepartmentController,
+    RoleController,
+    UserController,
+)
+from main.modules.auth.schema_validator import (
+    DepartmentSchema,
+    LogInSchema,
+    RoleSchema,
+    SignUpSchema,
+    UpdatePassword,
+)
 from main.utils import get_data_from_request_or_raise_validation_error
 
 
@@ -72,7 +84,6 @@ class Signup(Resource):
 
 
 class Login(Resource):
-
     @staticmethod
     def post():
         """
@@ -83,31 +94,34 @@ class Login(Resource):
         token, error_msg = UserController.login(data)
         if error_msg:
             return make_response(jsonify(error=error_msg), 403)
-        return make_response(jsonify(token), 200)
+        response = make_response(jsonify(status="ok"), 200)
+        response.set_cookie("access_token", token["access_token"].encode("utf-8"), httponly=True)
+        response.set_cookie("refresh_token", token["refresh_token"].encode("utf-8"), httponly=True)
+        return response
 
 
 class VerifyToken(Resource):
-    method_decorators = [jwt_required()]
+    method_decorators = [verify_token()]
 
     @staticmethod
     def get():
-        return make_response(jsonify(UserController.get_identity()))
+        return make_response(jsonify(UserController.get_current_user_identity()))
 
 
-class Refresh(Resource):
-    method_decorators = [jwt_required(refresh=True)]
-
-    @staticmethod
-    def get():
-        """
-        To update the access token using a valid refresh token.
-        :return:
-        """
-        return make_response(jsonify(UserController.refresh_access_token()))
+# class Refresh(Resource):
+#     method_decorators = [jwt_required(refresh=True)]
+#
+#     @staticmethod
+#     def get():
+#         """
+#         To update the access token using a valid refresh token.
+#         :return:
+#         """
+#         return make_response(jsonify(UserController.refresh_access_token()))
 
 
 class ChangePassword(Resource):
-    method_decorators = [jwt_required()]
+    method_decorators = [verify_token()]
 
     @staticmethod
     def put():
@@ -123,7 +137,7 @@ class ChangePassword(Resource):
 
 
 class Logout(Resource):
-    method_decorators = [jwt_required(verify_type=False)]
+    method_decorators = [verify_token()]
 
     @staticmethod
     def get():
@@ -131,7 +145,7 @@ class Logout(Resource):
         To log out the user.
         :return:
         """
-        return make_response(jsonify(UserController.logout()))
+        return make_response(jsonify(status="success"))
 
 
 auth_namespace = Namespace("auth", description="Auth Operations")
@@ -142,7 +156,7 @@ auth_namespace.add_resource(Role, "/role/<role_id>")
 
 auth_namespace.add_resource(Signup, "/signup")
 auth_namespace.add_resource(Login, "/login")
-auth_namespace.add_resource(Refresh, "/refresh")
+# auth_namespace.add_resource(Refresh, "/refresh")
 auth_namespace.add_resource(ChangePassword, "/change_password")
 auth_namespace.add_resource(Logout, "/logout")
 auth_namespace.add_resource(VerifyToken, "/verify")
