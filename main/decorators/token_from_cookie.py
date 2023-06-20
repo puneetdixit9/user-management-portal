@@ -1,7 +1,7 @@
 from functools import wraps
 
 import jwt
-from flask import current_app, g, jsonify, make_response, request
+from flask import current_app, g, jsonify, make_response, request, session
 
 from main.modules.auth.model import User
 
@@ -16,6 +16,8 @@ def verify_token():
         @wraps(f)
         def decorated(*args, **kwargs):
             access_token_cookie = request.cookies.get("access_token")
+            if not access_token_cookie:
+                access_token_cookie = session.get("access_token")
 
             if not access_token_cookie:
                 return make_response(jsonify({"message": "Access token not found"}), 401)

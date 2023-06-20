@@ -2,6 +2,7 @@
 /shelf/
 **xml
 */venv/*
+/flask_session/
 /logs/
 /instance/
 *.pyc

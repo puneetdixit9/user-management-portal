@@ -1,4 +1,4 @@
-from flask import jsonify, make_response, request
+from flask import jsonify, make_response, request, session
 
 # from flask_jwt_extended import jwt_required
 from flask_restx import Namespace, Resource
@@ -95,8 +95,9 @@ class Login(Resource):
         if error_msg:
             return make_response(jsonify(error=error_msg), 403)
         response = make_response(jsonify(status="ok"), 200)
-        response.set_cookie("access_token", token["access_token"].encode("utf-8"), httponly=True)
-        response.set_cookie("refresh_token", token["refresh_token"].encode("utf-8"), httponly=True)
+        session["access_token"] = token["access_token"].encode("utf-8")
+        # response.set_cookie("access_token", token["access_token"].encode("utf-8"),
+        #                     httponly=True, expires=datetime.now() + timedelta(days=1))
         return response
 
 
@@ -145,6 +146,7 @@ class Logout(Resource):
         To log out the user.
         :return:
         """
+        session.clear()
         return make_response(jsonify(status="success"))
 
 
