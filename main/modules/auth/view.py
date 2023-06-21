@@ -1,6 +1,6 @@
-from flask import jsonify, make_response, request, session
+from datetime import datetime, timedelta
 
-# from flask_jwt_extended import jwt_required
+from flask import jsonify, make_response, request, session
 from flask_restx import Namespace, Resource
 
 from main.decorators.token_from_cookie import verify_token
@@ -15,17 +15,18 @@ from main.modules.auth.schema_validator import (
     RoleSchema,
     SignUpSchema,
     UpdatePassword,
+    UpdateUserSchema,
 )
 from main.utils import get_data_from_request_or_raise_validation_error
 
 
 class Departments(Resource):
     @staticmethod
-    def get(self):
+    def get():
         return make_response(jsonify(DepartmentController.get_all_departments()))
 
     @staticmethod
-    def post(self):
+    def post():
         data = get_data_from_request_or_raise_validation_error(DepartmentSchema, request.json, many=True)
         ids, errors = DepartmentController.add_departments(data)
         return make_response(jsonify(ids=ids, errors=errors), 201)
@@ -96,8 +97,12 @@ class Login(Resource):
             return make_response(jsonify(error=error_msg), 403)
         response = make_response(jsonify(status="ok"), 200)
         session["access_token"] = token["access_token"].encode("utf-8")
-        # response.set_cookie("access_token", token["access_token"].encode("utf-8"),
-        #                     httponly=True, expires=datetime.now() + timedelta(days=1))
+        response.set_cookie(
+            "access_token",
+            token["access_token"].encode("utf-8"),
+            httponly=True,
+            expires=datetime.now() + timedelta(days=1),
+        )
         return response
 
 
@@ -147,7 +152,31 @@ class Logout(Resource):
         :return:
         """
         session.clear()
-        return make_response(jsonify(status="success"))
+        return make_response(jsonify(status="ok"))
+
+
+class UserDetails(Resource):
+    # method_decorators = [verify_token()]
+
+    @staticmethod
+    def get(user_id: int):
+        """
+        To get user details.
+        :param user_id:
+        """
+        response = UserController.get_user_details(user_id)
+        return make_response(jsonify(response))
+
+    @staticmethod
+    def put(user_id: int):
+        """
+        To update user details.
+        :param user_id:
+        :return:
+        """
+        data = get_data_from_request_or_raise_validation_error(UpdateUserSchema, request.json)
+        UserController.update_user_details(user_id, data)
+        return make_response(jsonify(status="ok"))
 
 
 auth_namespace = Namespace("auth", description="Auth Operations")
@@ -162,3 +191,4 @@ auth_namespace.add_resource(Login, "/login")
 auth_namespace.add_resource(ChangePassword, "/change_password")
 auth_namespace.add_resource(Logout, "/logout")
 auth_namespace.add_resource(VerifyToken, "/verify")
+auth_namespace.add_resource(UserDetails, "/user/<int:user_id>")

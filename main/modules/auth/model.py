@@ -33,6 +33,13 @@ class User(BaseModel):
     role = db.relationship("Role", backref=db.backref("user", lazy=True))
     dept = db.relationship("Department", backref=db.backref("user", lazy=True))
 
+    def serialize(self) -> dict:
+        """
+        To convert the model object to a dict.
+        :return:
+        """
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name != "password"}
+
 
 class UserRoleDeptMapping(BaseModel):
     """

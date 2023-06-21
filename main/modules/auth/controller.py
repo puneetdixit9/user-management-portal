@@ -78,6 +78,11 @@ class FuncDeptController:
 class RoleController:
     @classmethod
     def add_roles(cls, roles: list[dict]) -> (list, list):
+        """
+        To add roles
+        :param roles:
+        :return:
+        """
         ids = []
         errors = []
         for role in roles:
@@ -87,10 +92,19 @@ class RoleController:
 
     @classmethod
     def get_all_roles(cls) -> list:
+        """
+        To get all roles
+        :return:
+        """
         return Role.get_all()
 
     @classmethod
     def get_role_by_id(cls, role_id: int):
+        """
+        To get role by id.
+        :param role_id:
+        :return:
+        """
         role = Role.get(role_id, to_json=True)
         if role:
             return role
@@ -98,6 +112,12 @@ class RoleController:
 
     @classmethod
     def update_role(cls, role_id: int, data: dict):
+        """
+        To update role.
+        :param role_id:
+        :param data:
+        :return:
+        """
         role = Role.get(role_id)
         if role:
             role.update(data)
@@ -106,6 +126,11 @@ class RoleController:
 
     @classmethod
     def delete_role(cls, role_id: int):
+        """
+        To delete a role.
+        :param role_id:
+        :return:
+        """
         role = Role.get(role_id)
         if role:
             Role.delete(role_id=role_id)
@@ -115,7 +140,12 @@ class RoleController:
 
 class UserController:
     @classmethod
-    def create_user(cls, user_data: dict):
+    def create_user(cls, user_data: dict) -> (int, str):
+        """
+        To create a new user.
+        :param user_data:
+        :return:
+        """
         error = ""
         user_id = None
         user = User.filter(email=user_data["email"], only_first=True)
@@ -175,3 +205,28 @@ class UserController:
         """
         blocked_token = JWTController.block_jwt_token()
         return {"msg": f"{blocked_token.type.capitalize()} token successfully revoked"}
+
+    @classmethod
+    def get_user_details(cls, user_id: int):
+        """
+        To get the user details
+        :param user_id:
+        :return:
+        """
+        user = User.get(user_id, to_json=True)
+        if not user:
+            raise RecordNotFoundError
+        return user
+
+    @classmethod
+    def update_user_details(cls, user_id: int, data: dict):
+        """
+        To update user details.
+        :param user_id:
+        :param data:
+        :return:
+        """
+        user = User.get(user_id)
+        if not user:
+            raise RecordNotFoundError
+        user.update(data)

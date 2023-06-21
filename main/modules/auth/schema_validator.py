@@ -10,29 +10,33 @@ class RoleSchema(Schema):
     role_name = fields.String(required=True)
 
 
-class SignUpSchema(Schema):
+class UpdateUserSchema(Schema):
     """
     To validate signup request body.
     """
 
-    user_name = fields.String()
     first_name = fields.String()
     middle_name = fields.String()
     last_name = fields.String()
     manager_name = fields.String()
     employee_code = fields.String()
-    email = fields.Email(required=True)
-    password = fields.String(required=True, validate=Length(min=8))  # noqa
     mobile_number = fields.String()
     status = fields.String()
-    status_changed_by = fields.String()
-    status_changed_on = fields.Date()
     usage_count = fields.Integer()
-    last_login_on = fields.Date()
     func_id = fields.Integer()
     is_active = fields.Integer()
     role_id = fields.Integer()
     dept_id = fields.Integer()
+
+
+class SignUpSchema(UpdateUserSchema):
+    """
+    To Validate signup data
+    """
+
+    user_name = fields.String()
+    email = fields.Email(required=True)
+    password = fields.String(required=True, validate=Length(min=8))  # noqa
 
 
 class LogInSchema(Schema):

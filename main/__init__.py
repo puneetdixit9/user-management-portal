@@ -19,14 +19,19 @@ def get_app(env=None, config=None):
     app = Flask(__name__)
     app.config["SESSION_TYPE"] = "filesystem"
     app.config["SESSION_COOKIE_HTTPONLY"] = True
-    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    # app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
     if not config:
         if not env:
             env = os.environ.get("FLASK_ENV", "dev")
         config = config_by_name[env]
 
     app.config.update(config)
-    CORS(app, supports_credentials=True, send_cookie=True, resources={r"/*": {"origins": "http://localhost:3001"}})
+    CORS(
+        app,
+        supports_credentials=True,
+        send_cookie=True,
+        resources={r"/*": {"origins": config["ALLOWED_ORIGINS"].split(",")}},
+    )
     Session(app)
 
     api.init_app(app)
