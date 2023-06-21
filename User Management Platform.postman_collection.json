@@ -74,19 +74,12 @@
 			"name": "Verify Token",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{jwt_token}}",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:5000/auth/verify",
+					"raw": "http://127.0.0.1:10001/auth/verify",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -94,7 +87,7 @@
 						"0",
 						"1"
 					],
-					"port": "5000",
+					"port": "10001",
 					"path": [
 						"auth",
 						"verify"
@@ -205,6 +198,63 @@
 					"path": [
 						"auth",
 						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:10001/auth/user/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "10001",
+					"path": [
+						"auth",
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user details",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"first_name\": \"Puneet\" ,\r\n    \"func_id\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:10001/auth/user/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "10001",
+					"path": [
+						"auth",
+						"user",
+						"1"
 					]
 				}
 			},
