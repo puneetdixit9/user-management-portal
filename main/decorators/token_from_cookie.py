@@ -29,7 +29,10 @@ def verify_token():
                 jwt_identity = access_token["sub"]
                 email = jwt_identity["email"]
                 user = User.filter(email=email, only_first=True)
-                g.user = user if user else None
+                if not user:
+                    return make_response(jsonify({"error": "User Not Found !!"}), 403)
+                g.user = user
+                g.user_role = jwt_identity["role"]
                 return f(*args, **kwargs)
             except jwt.ExpiredSignatureError:
                 return make_response(jsonify({"message": "Access token has expired"}), 401)

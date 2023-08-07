@@ -20,8 +20,8 @@ def app():
 
     yield app
 
-    with app.app_context():
-        db.drop_all()
+    # with app.app_context():
+    #     db.drop_all()
 
 
 @pytest.fixture(scope="class")

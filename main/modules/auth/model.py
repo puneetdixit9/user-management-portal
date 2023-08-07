@@ -22,11 +22,13 @@ class User(BaseModel):
     mobile_number = db.Column(db.String(100))
     status = db.Column(db.String(100))
     status_changed_by = db.Column(db.String(100))
-    status_changed_on = db.Column(db.Date)
+    status_changed_on = db.Column(db.DateTime)
     usage_count = db.Column(db.Integer)
     last_login_on = db.Column(db.DateTime)
     func_id = db.Column(db.BIGINT)
-    is_active = db.Column(db.Integer, default=1)
+    approved = db.Column(db.Boolean, default=False)
+    approved_by = db.Column(db.String(100))
+    is_active = db.Column(db.Boolean, default=True)
     role_id = db.Column(db.BIGINT, ForeignKey("role.role_id"))
     dept_id = db.Column(db.BIGINT, ForeignKey("department.dept_id"))
 
@@ -53,7 +55,7 @@ class UserRoleDeptMapping(BaseModel):
     user_id = db.Column(db.BIGINT, ForeignKey("user.user_id"))
     role_id = db.Column(db.BIGINT, ForeignKey("role.role_id"))
     dept_id = db.Column(db.BIGINT, ForeignKey("department.dept_id"))
-    is_active = db.Column(db.Integer, default=1)
+    is_active = db.Column(db.Boolean, default=True)
 
 
 class Role(BaseModel):
@@ -65,7 +67,7 @@ class Role(BaseModel):
 
     role_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
     role_name = db.Column(db.String(100), unique=True)
-    is_active = db.Column(db.INTEGER, default=1)
+    is_active = db.Column(db.Boolean, default=True)
 
 
 class FuncDept(BaseModel):
@@ -79,7 +81,7 @@ class FuncDept(BaseModel):
     dept_id = db.Column(db.BIGINT, ForeignKey("department.dept_id"))
     dept_name = db.Column(db.String(100))
     sub_function = db.Column(db.String(100))
-    is_active = db.Column(db.INTEGER, default=1)
+    is_active = db.Column(db.Boolean, default=True)
 
 
 class Department(BaseModel):
@@ -90,5 +92,5 @@ class Department(BaseModel):
     __tablename__ = "department"
 
     dept_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    is_active = db.Column(db.INTEGER, default=1)
+    is_active = db.Column(db.Boolean, default=True)
     dept_name = db.Column(db.String(100), unique=True)

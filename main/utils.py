@@ -59,29 +59,32 @@ class FiltersDataSchema(Schema):
     Schema to validate filters data
     """
 
-    eq = fields.Dict(fields.String(), fields.Field(validate=validate_not_dict_list_tuple), required=False)
-    ne = fields.Dict(fields.String(), fields.Field(validate=validate_not_dict_list_tuple), required=False)
-    lt = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)
-    gt = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)
-    lte = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)
-    gte = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)
+    eq = fields.Dict(fields.String(), fields.Field(validate=validate_not_dict_list_tuple), required=False)  # noqa
+    ne = fields.Dict(fields.String(), fields.Field(validate=validate_not_dict_list_tuple), required=False)  # noqa
+    lt = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)  # noqa
+    gt = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)  # noqa
+    lte = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)  # noqa
+    gte = fields.Dict(fields.String(), fields.Field(validate=validate_int_float_date), required=False)  # noqa
     between = fields.Dict(
         fields.String(),
-        fields.List(fields.Field(validate=validate_int_float_date), validate=Length(equal=2)),
+        fields.List(fields.Field(validate=validate_int_float_date), validate=Length(equal=2)),  # noqa
         required=False,
     )
     op_in = fields.Dict(
-        fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False
+        fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False  # noqa
     )
-    nin = fields.Dict(fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False)
-    null = fields.List(fields.String(), required=False)
-    not_null = fields.List(fields.String(), required=False)
-    op_or = fields.Dict(fields.String(), fields.Field(validate=validate_not_dict_list_tuple), required=False)
-    substr = fields.Dict(fields.String(), fields.String(validate=validate_substr), required=False)
+    nin = fields.Dict(
+        fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False
+    )  # noqa
+    null = fields.List(fields.String(), required=False)  # noqa
+    not_null = fields.List(fields.String(), required=False)  # noqa
+    op_or = fields.Dict(fields.String(), fields.Field(validate=validate_not_dict_list_tuple), required=False)  # noqa
+    substr = fields.Dict(fields.String(), fields.String(validate=validate_substr), required=False)  # noqa
 
 
 def get_data_from_request_or_raise_validation_error(
-        validator_schema: type, data: dict, many: bool = False) -> dict or list:
+    validator_schema: type, data: dict, many: bool = False
+) -> dict or list:
     """
     To validate the data according to its defined schema.
     :param validator_schema:
@@ -131,7 +134,7 @@ def add_filters_using_mapping(model: type, conditions: dict, filters: list, oper
         "lt": operator.lt,
         "lte": operator.le,
         "gt": operator.gt,
-        "gte": operator.ge
+        "gte": operator.ge,
     }
 
     logical_or_filters = []

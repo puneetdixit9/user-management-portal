@@ -4,12 +4,14 @@ from flask import jsonify, make_response, request, session
 from flask_restx import Namespace, Resource
 
 from main.decorators.token_from_cookie import verify_token
+from main.decorators.user_role import allowed_roles
 from main.modules.auth.controller import (
     DepartmentController,
     RoleController,
     UserController,
 )
 from main.modules.auth.schema_validator import (
+    ApproveUserSchema,
     DepartmentSchema,
     LogInSchema,
     RoleSchema,
@@ -21,6 +23,8 @@ from main.utils import get_data_from_request_or_raise_validation_error
 
 
 class Departments(Resource):
+    method_decorators = [verify_token()]
+
     @staticmethod
     def get():
         return make_response(jsonify(DepartmentController.get_all_departments()))
@@ -29,10 +33,12 @@ class Departments(Resource):
     def post():
         data = get_data_from_request_or_raise_validation_error(DepartmentSchema, request.json, many=True)
         ids, errors = DepartmentController.add_departments(data)
-        return make_response(jsonify(ids=ids, errors=errors), 201)
+        return make_response(jsonify(ids=ids, errors=errors), 201 if ids else 409)
 
 
 class Department(Resource):
+    method_decorators = [verify_token()]
+
     @staticmethod
     def get(dept_id: int):
         return make_response(jsonify(DepartmentController.get_dept_by_id(dept_id)))
@@ -48,6 +54,8 @@ class Department(Resource):
 
 
 class Roles(Resource):
+    method_decorators = [verify_token()]
+
     @staticmethod
     def get():
         return make_response(jsonify(RoleController.get_all_roles()))
@@ -56,10 +64,12 @@ class Roles(Resource):
     def post():
         data = get_data_from_request_or_raise_validation_error(RoleSchema, request.json, many=True)
         ids, errors = RoleController.add_roles(data)
-        return make_response(jsonify(ids=ids, errors=errors), 201)
+        return make_response(jsonify(ids=ids, errors=errors), 201 if ids else 409)
 
 
 class Role(Resource):
+    method_decorators = [verify_token()]
+
     @staticmethod
     def get(role_id: int):
         return make_response(jsonify(RoleController.get_role_by_id(role_id)))
@@ -79,9 +89,7 @@ class Signup(Resource):
     def post():
         data = get_data_from_request_or_raise_validation_error(SignUpSchema, request.json)
         user_id, error = UserController.create_user(data)
-        if error:
-            return make_response(jsonify(error=error), 409)
-        return make_response(jsonify(user_id=user_id), 201)
+        return make_response(jsonify(error=error), 409) if error else make_response(jsonify(user_id=user_id), 201)
 
 
 class Login(Resource):
@@ -92,9 +100,9 @@ class Login(Resource):
         :return:
         """
         data = get_data_from_request_or_raise_validation_error(LogInSchema, request.json)
-        token, error_msg = UserController.login(data)
-        if error_msg:
-            return make_response(jsonify(error=error_msg), 403)
+        token, error = UserController.login(data)
+        if error:
+            return make_response(jsonify(error=error["msg"]), error["code"])
         response = make_response(jsonify(status="ok"), 200)
         session["access_token"] = token["access_token"].encode("utf-8")
         response.set_cookie(
@@ -156,7 +164,7 @@ class Logout(Resource):
 
 
 class UserDetails(Resource):
-    # method_decorators = [verify_token()]
+    method_decorators = [verify_token()]
 
     @staticmethod
     def get(user_id: int):
@@ -179,6 +187,24 @@ class UserDetails(Resource):
         return make_response(jsonify(status="ok"))
 
 
+class ApproveUser(Resource):
+    method_decorators = [allowed_roles(["admin"]), verify_token()]
+
+    @staticmethod
+    def post(user_id: int):
+        data = get_data_from_request_or_raise_validation_error(ApproveUserSchema, request.json)
+        UserController.approve_user_account(user_id, data)
+        return make_response(jsonify(status="ok"))
+
+
+class PendingUsers(Resource):
+    method_decorators = [allowed_roles(["admin"]), verify_token()]
+
+    @staticmethod
+    def get():
+        return make_response(UserController.get_pending_approval_users())
+
+
 auth_namespace = Namespace("auth", description="Auth Operations")
 auth_namespace.add_resource(Departments, "/departments")
 auth_namespace.add_resource(Department, "/department/<dept_id>")
@@ -192,3 +218,5 @@ auth_namespace.add_resource(ChangePassword, "/change_password")
 auth_namespace.add_resource(Logout, "/logout")
 auth_namespace.add_resource(VerifyToken, "/verify")
 auth_namespace.add_resource(UserDetails, "/user/<int:user_id>")
+auth_namespace.add_resource(ApproveUser, "/approve-user/<int:user_id>")
+auth_namespace.add_resource(PendingUsers, "/pending-users")

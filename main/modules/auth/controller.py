@@ -3,9 +3,11 @@ from datetime import datetime
 from flask import g
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from main.exceptions import RecordNotFoundError
+from main.db import db
+from main.exceptions import CustomValidationError, RecordNotFoundError
 from main.modules.auth.model import Department, Role, User
 from main.modules.jwt.controller import JWTController
+from main.utils import get_query_including_filters
 
 
 class DepartmentController:
@@ -86,6 +88,9 @@ class RoleController:
         ids = []
         errors = []
         for role in roles:
+            if Role.filter(role_name=role["role_name"], only_first=True):
+                errors.append(f"'{role['role_name']}' role already exists")
+                continue
             role_id = Role.create(role).role_id
             ids.append(role_id)
         return ids, errors
@@ -148,9 +153,15 @@ class UserController:
         """
         error = ""
         user_id = None
-        user = User.filter(email=user_data["email"], only_first=True)
+        query = get_query_including_filters(
+            db, User, {"op_or": {"email": user_data["email"], "user_name": user_data["user_name"]}}
+        )
+        user = query.first()
         if user:
-            error = f"user already exists with email : '{user_data['email']}'"
+            if user.email == user_data["email"]:
+                error = f"user already exists with email : '{user_data['email']}'"
+            else:
+                error = f"user already exits with user_name : '{user_data['user_name']}'"
         else:
             user_data["password"] = generate_password_hash(user_data["password"])
             user_id = User.create(user_data).user_id
@@ -179,19 +190,52 @@ class UserController:
         :return dict:
         """
         token = dict()
-        error = str()
+        error = dict()
         user = User.filter(email=login_data["email"], only_first=True)
         if not user:
-            error = f"user not found with '{login_data['email']}'."
+            error["msg"] = f"user not found with '{login_data['email']}'."
+            error["code"] = 403
+        elif not user.approved:
+            error["msg"] = "Account approval is still pending."
+            error["code"] = 412
         elif check_password_hash(user.password, login_data["password"]):
             token = JWTController.get_access_and_refresh_token(user)
             user.update({"last_login_on": datetime.now()})
         else:
-            error = "wrong password"
+            error["msg"] = "wrong password"
+            error["code"] = 403
         return token, error
 
     @classmethod
-    def get_current_user_identity(cls):
+    def approve_user_account(cls, user_id: int, data: dict):
+        """
+        To approve user account.
+        :param user_id:
+        :param data:
+        :return:
+        """
+        logged_in_user = cls.get_current_user_identity()
+        user = User.filter(user_id=user_id, only_first=True)
+        if not user:
+            raise RecordNotFoundError(f"User not found with user_id: {user_id}")
+
+        if data.get("role_id") and not RoleController.get_role_by_id(data["role_id"]):
+            raise CustomValidationError(f"Invalid role_id : {data['role_id']}")
+
+        data["approved"] = True
+        data["approved_by"] = logged_in_user["email"]
+        data["modified_by"] = logged_in_user["email"]
+        user.update(data)
+
+    @staticmethod
+    def get_pending_approval_users():
+        """
+        To get pending approval users.
+        """
+        return User.filter(approved=False, to_json=True)
+
+    @staticmethod
+    def get_current_user_identity():
         """
         To return the identity.
         """
