@@ -154,14 +154,14 @@ class UserController:
         error = ""
         user_id = None
         query = get_query_including_filters(
-            db, User, {"op_or": {"email": user_data["email"], "user_name": user_data["user_name"]}}
+            db, User, {"op_or": {"email": user_data["email"], "username": user_data["username"]}}
         )
         user = query.first()
         if user:
             if user.email == user_data["email"]:
                 error = f"user already exists with email : '{user_data['email']}'"
             else:
-                error = f"user already exits with user_name : '{user_data['user_name']}'"
+                error = f"user already exits with username : '{user_data['username']}'"
         else:
             user_data["password"] = generate_password_hash(user_data["password"])
             user_id = User.create(user_data).user_id
@@ -194,9 +194,9 @@ class UserController:
         if login_data.get("email"):
             user = User.filter(email=login_data["email"], only_first=True)
         else:
-            user = User.filter(user_name=login_data["user_name"], only_first=True)
+            user = User.filter(username=login_data["username"], only_first=True)
         if not user:
-            error["msg"] = f"user not found with '{login_data.get('email') or login_data.get('user_name')}'."
+            error["msg"] = f"user not found with '{login_data.get('email') or login_data.get('username')}'."
             error["code"] = 403
         elif not user.approved:
             error["msg"] = "Account approval is still pending."

@@ -80,7 +80,7 @@ def upgrade():
     op.create_table(
         "user",
         sa.Column("user_id", sa.BIGINT(), autoincrement=True, nullable=False),
-        sa.Column("user_name", sa.String(length=100), nullable=True),
+        sa.Column("username", sa.String(length=100), nullable=True),
         sa.Column("first_name", sa.String(length=100), nullable=True),
         sa.Column("middle_name", sa.String(length=100), nullable=True),
         sa.Column("last_name", sa.String(length=100), nullable=True),
@@ -115,7 +115,7 @@ def upgrade():
         sa.PrimaryKeyConstraint("user_id"),
         sa.UniqueConstraint("email"),
         sa.UniqueConstraint("employee_code"),
-        sa.UniqueConstraint("user_name"),
+        sa.UniqueConstraint("username"),
     )
     op.create_table(
         "user_role_dept_mapping",
@@ -159,7 +159,7 @@ def upgrade():
 
     op.execute(
         text(
-            "INSERT INTO user (user_name, first_name, last_name, email, password, is_active, approved, approved_by, role_id, created_on, created_by) "
+            "INSERT INTO user (username, first_name, last_name, email, password, is_active, approved, approved_by, role_id, created_on, created_by) "
             "VALUES ('admin', 'Admin', 'User', 'admin@example.com', :hashed_password_here, true, true, 'system', :role_id, now(), 'system')"
         ).bindparams(hashed_password_here=admin_password, role_id=admin_role_id)
     )

@@ -11,7 +11,7 @@ class User(BaseModel):
     __tablename__ = "user"
 
     user_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    user_name = db.Column(db.String(100), unique=True)
+    username = db.Column(db.String(100), unique=True)
     first_name = db.Column(db.String(100))
     middle_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))

@@ -34,7 +34,7 @@ class SignUpSchema(UpdateUserSchema):
     To Validate signup data
     """
 
-    user_name = fields.String()
+    username = fields.String()
     email = fields.Email(required=True)
     password = fields.String(required=True, validate=Length(min=8))  # noqa
 
@@ -46,12 +46,12 @@ class LogInSchema(Schema):
 
     email = fields.Email()
     password = fields.String(required=True)
-    user_name = fields.String()
+    username = fields.String()
 
     @validates_schema
     def validate_at_least_one(self, data, **kwargs):
-        if "email" not in data and "user_name" not in data:
-            raise ValidationError("At least one of 'email' or 'user_name' must be provided.")
+        if "email" not in data and "username" not in data:
+            raise ValidationError("At least one of 'email' or 'username' must be provided.")
 
 
 class UpdatePassword(Schema):
