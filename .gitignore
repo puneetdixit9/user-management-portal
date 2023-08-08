@@ -4,6 +4,7 @@
 */venv/*
 /flask_session/
 /logs/
+/venv/
 /instance/
 *.pyc
 *.log
