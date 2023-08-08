@@ -144,6 +144,7 @@ def upgrade():
         sa.PrimaryKeyConstraint("user_role_dept_mapping_id"),
     )
     # ### end Alembic commands ###
+    # Create the 'admin' role
     op.execute(
         text(
             "INSERT INTO role (role_name, is_active, created_on, created_by) " "VALUES ('admin', true, now(), 'system')"
@@ -160,9 +161,7 @@ def upgrade():
         text(
             "INSERT INTO user (user_name, first_name, last_name, email, password, is_active, role_id, created_on, created_by) "
             "VALUES ('admin', 'Admin', 'User', 'admin@example.com', :hashed_password_here, true, :role_id, now(), 'system')"
-        ),
-        hashed_password_here=admin_password,
-        role_id=admin_role_id,
+        ).bindparams(hashed_password_here=admin_password, role_id=admin_role_id)
     )
 
 
