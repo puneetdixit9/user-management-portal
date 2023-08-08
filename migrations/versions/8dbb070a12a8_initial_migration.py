@@ -9,6 +9,7 @@ import os
 
 import sqlalchemy as sa
 from alembic import op
+from sqlalchemy import text
 from werkzeug.security import generate_password_hash
 
 # revision identifiers, used by Alembic.
@@ -144,18 +145,22 @@ def upgrade():
     )
     # ### end Alembic commands ###
     op.execute(
-        "INSERT INTO role (role_name, is_active, created_on, created_by) " "VALUES ('admin', true, now(), 'system')"
+        text(
+            "INSERT INTO role (role_name, is_active, created_on, created_by) " "VALUES ('admin', true, now(), 'system')"
+        )
     )
 
     connection = op.get_bind()
-    result = connection.execute("SELECT role_id FROM role WHERE role_name = 'admin'")
+    result = connection.execute(text("SELECT role_id FROM role WHERE role_name = 'admin'"))
     admin_role_id = result.scalar()
+
     admin_password = generate_password_hash(os.environ.get("SECRET_KEY"))
+
     op.execute(
-        "INSERT INTO user (user_name, first_name, last_name, email, password, is_active, role_id, created_on, "
-        "created_by)"
-        "VALUES ('admin', 'Admin', 'User', 'admin@example.com', :hashed_password_here, true, :role_id, now(), "
-        "'system')",
+        text(
+            "INSERT INTO user (user_name, first_name, last_name, email, password, is_active, role_id, created_on, created_by) "
+            "VALUES ('admin', 'Admin', 'User', 'admin@example.com', :hashed_password_here, true, :role_id, now(), 'system')"
+        ),
         hashed_password_here=admin_password,
         role_id=admin_role_id,
     )
