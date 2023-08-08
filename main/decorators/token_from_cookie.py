@@ -18,6 +18,8 @@ def verify_token():
             access_token_cookie = request.cookies.get("access_token")
             if not access_token_cookie:
                 access_token_cookie = session.get("access_token")
+            if not access_token_cookie:
+                access_token_cookie = request.headers.get("Authorization")
 
             if not access_token_cookie:
                 return make_response(jsonify({"message": "Access token not found"}), 401)

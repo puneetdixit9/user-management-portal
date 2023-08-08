@@ -191,9 +191,12 @@ class UserController:
         """
         token = dict()
         error = dict()
-        user = User.filter(email=login_data["email"], only_first=True)
+        if login_data.get("email"):
+            user = User.filter(email=login_data["email"], only_first=True)
+        else:
+            user = User.filter(user_name=login_data["user_name"], only_first=True)
         if not user:
-            error["msg"] = f"user not found with '{login_data['email']}'."
+            error["msg"] = f"user not found with '{login_data.get('email') or login_data.get('user_name')}'."
             error["code"] = 403
         elif not user.approved:
             error["msg"] = "Account approval is still pending."
@@ -239,7 +242,7 @@ class UserController:
         """
         To return the identity.
         """
-        return {"email": g.user.email, "role": g.user.role, "user_id": g.user.user_id}
+        return {"email": g.user.email, "role": g.user.role.role_name, "user_id": g.user.user_id}
 
     @classmethod
     def logout(cls):

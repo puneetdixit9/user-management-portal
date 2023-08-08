@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, ValidationError, fields, validates_schema
 from marshmallow.validate import Length
 
 
@@ -44,8 +44,14 @@ class LogInSchema(Schema):
     In this schema we defined the required json to log in any user.
     """
 
-    email = fields.Email(required=True)
+    email = fields.Email()
     password = fields.String(required=True)
+    user_name = fields.String()
+
+    @validates_schema
+    def validate_at_least_one(self, data, **kwargs):
+        if "email" not in data and "user_name" not in data:
+            raise ValidationError("At least one of 'email' or 'user_name' must be provided.")
 
 
 class UpdatePassword(Schema):

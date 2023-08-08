@@ -103,7 +103,8 @@ class Login(Resource):
         token, error = UserController.login(data)
         if error:
             return make_response(jsonify(error=error["msg"]), error["code"])
-        response = make_response(jsonify(status="ok"), 200)
+        # response = make_response(jsonify(status="ok"), 200)
+        response = make_response(token)
         session["access_token"] = token["access_token"].encode("utf-8")
         response.set_cookie(
             "access_token",
