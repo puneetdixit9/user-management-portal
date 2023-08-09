@@ -32,7 +32,7 @@ def get_app(env=None, config=None):
         send_cookie=True,
         resources={r"/*": {"origins": config["ALLOWED_ORIGINS"].split(",")}},
     )
-    Session(app)
+    # Session(app)
 
     api.init_app(app)
     db.init_app(app)

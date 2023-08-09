@@ -37,6 +37,8 @@ class SignUpSchema(UpdateUserSchema):
     username = fields.String()
     email = fields.Email(required=True)
     password = fields.String(required=True, validate=Length(min=8))  # noqa
+    first_name = fields.String()
+    last_name = fields.String()
 
 
 class LogInSchema(Schema):

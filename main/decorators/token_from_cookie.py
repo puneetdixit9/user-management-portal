@@ -2,6 +2,7 @@ from functools import wraps
 
 import jwt
 from flask import current_app, g, jsonify, make_response, request, session
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 
 from main.modules.auth.model import User
 
@@ -25,10 +26,12 @@ def verify_token():
                 return make_response(jsonify({"message": "Access token not found"}), 401)
 
             try:
-                access_token = jwt.decode(
-                    access_token_cookie, current_app.config.get("SECRET_KEY"), algorithms=["HS256"]
-                )
-                jwt_identity = access_token["sub"]
+                # access_token = jwt.decode(
+                #     access_token_cookie, current_app.config.get("SECRET_KEY"), algorithms=["HS256"]
+                # )
+                # jwt_identity = access_token["sub"]
+                verify_jwt_in_request()
+                jwt_identity = get_jwt_identity()
                 email = jwt_identity["email"]
                 user = User.filter(email=email, only_first=True)
                 if not user:

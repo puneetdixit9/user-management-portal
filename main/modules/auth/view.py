@@ -105,13 +105,13 @@ class Login(Resource):
             return make_response(jsonify(error=error["msg"]), error["code"])
         # response = make_response(jsonify(status="ok"), 200)
         response = make_response(token)
-        session["access_token"] = token["access_token"].encode("utf-8")
-        response.set_cookie(
-            "access_token",
-            token["access_token"].encode("utf-8"),
-            httponly=True,
-            expires=datetime.now() + timedelta(days=1),
-        )
+        # session["access_token"] = token["access_token"].encode("utf-8")
+        # response.set_cookie(
+        #     "access_token",
+        #     token["access_token"].encode("utf-8"),
+        #     httponly=True,
+        #     expires=datetime.now() + timedelta(days=1),
+        # )
         return response
 
 
