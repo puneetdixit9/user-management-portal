@@ -25,14 +25,18 @@ class User(BaseModel):
     status_changed_on = db.Column(db.DateTime)
     usage_count = db.Column(db.Integer)
     last_login_on = db.Column(db.DateTime)
-    func_id = db.Column(db.BIGINT)
     approved = db.Column(db.Boolean, default=False)
     approved_by = db.Column(db.String(100))
     is_active = db.Column(db.Boolean, default=True)
+    deactivated_by = db.Column(db.String(100))
+    deactivated_on = db.Column(db.DateTime)
+
+    func_id = db.Column(db.BIGINT, ForeignKey("department_sub_function.func_id"))
     role_id = db.Column(db.BIGINT, ForeignKey("role.role_id"))
     dept_id = db.Column(db.BIGINT, ForeignKey("department.dept_id"))
 
     role = db.relationship("Role", backref=db.backref("user", lazy=True))
+    function = db.relationship("DepartmentSubFunction", backref=db.backref("user", lazy=True))
     dept = db.relationship("Department", backref=db.backref("user", lazy=True))
 
     def serialize(self) -> dict:
@@ -41,6 +45,30 @@ class User(BaseModel):
         :return:
         """
         return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name != "password"}
+
+
+class Permission(BaseModel):
+    """
+    Model for permission.
+    """
+
+    __tablename__ = "permission"
+
+    permission_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
+    permission = db.Column(db.String(100))
+    application = db.Column(db.String(100))
+
+
+class UserPermissions(BaseModel):
+    """
+    Model for user permissions
+    """
+
+    __tablename__ = "user_permission"
+
+    user_permission_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.BIGINT, ForeignKey("user.user_id"))
+    permission_id = db.Column(db.BIGINT, ForeignKey("permission.permission_id"))
 
 
 class UserRoleDeptMapping(BaseModel):
@@ -70,17 +98,17 @@ class Role(BaseModel):
     is_active = db.Column(db.Boolean, default=True)
 
 
-class FuncDept(BaseModel):
+class DepartmentSubFunction(BaseModel):
     """
     Model for function with department.
     """
 
-    __tablename__ = "function_with_department"
+    __tablename__ = "department_sub_function"
 
     func_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    dept_id = db.Column(db.BIGINT, ForeignKey("department.dept_id"))
-    dept_name = db.Column(db.String(100))
-    sub_function = db.Column(db.String(100))
+    dept_id = db.Column(db.BIGINT, ForeignKey("department.dept_id"), nullable=False)
+    # dept_name = db.Column(db.String(100))
+    sub_function_name = db.Column(db.String(100))
     is_active = db.Column(db.Boolean, default=True)
 
 

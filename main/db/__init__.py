@@ -1,3 +1,4 @@
+from flask import g
 from flask_sqlalchemy import SQLAlchemy
 
 from main.utils import get_query_including_filters
@@ -20,6 +21,8 @@ class BaseModel(db.Model):
         :param data:
         :return:
         """
+        if hasattr(g, "user"):
+            data["created_by"] = g.user.email
         record = cls(**data)
         db.session.add(record)
         db.session.commit()
@@ -44,7 +47,7 @@ class BaseModel(db.Model):
 
     @classmethod
     def filter(cls, only_first=False, to_json=False, **filters):
-        query = cls.query.filter_by(**filters)
+        query = cls.query.filter_by(**{k: v for k, v in filters.items() if hasattr(cls, k)})
         if not only_first:
             records = query.all()
             if to_json:
@@ -75,6 +78,8 @@ class BaseModel(db.Model):
         :param data:
         :return:
         """
+        if hasattr(g, "user"):
+            data["modified_by"] = g.user.email
         for k, v in data.items():
             if hasattr(self, k):
                 setattr(self, k, v)
