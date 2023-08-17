@@ -287,22 +287,25 @@ class UserController:
         # TODO : add permissions of user in permission table.
 
     @classmethod
-    def get_user_permissions(cls):
+    def get_user_permissions(cls, user_id: int = None) -> list:
         """
         To get current logged-in user permissions.
+        :param user_id:
         """
-        logged_in_user = cls.get_current_user_identity()
-        user_permissions = UserPermissions.filter(user_id=logged_in_user["user_id"], to_json=True)
-        return user_permissions
+        if not user_id:
+            logged_in_user = cls.get_current_user_identity()
+            user_id = logged_in_user["user_id"]
+        return UserPermissions.filter(user_id=user_id, to_json=True)
 
     @classmethod
-    def add_permissions_to_user(cls, data: dict):
+    def add_permissions_to_user(cls, user_id: int, permissions_list: dict):
         """
         To add permissions to the user.
-        :param data:
+        :param user_id:
+        :param permissions_list:
         """
-        for permission_id in data["permission_ids"]:
-            UserPermissions.create({"permission_id": permission_id, "user_id": data["user_id"]})
+        for permission_id in permissions_list:
+            UserPermissions.create({"permission_id": permission_id, "user_id": user_id})
 
     @staticmethod
     def get_users(filters):

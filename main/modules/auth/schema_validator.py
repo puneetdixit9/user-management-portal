@@ -102,5 +102,4 @@ class UserPermissionsSchema(Schema):
     Required schema for user permissions.
     """
 
-    user_id = fields.Integer(required=True)
     permission_ids = fields.List(fields.Integer(), required=True)

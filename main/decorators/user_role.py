@@ -13,7 +13,7 @@ def allowed_roles(roles: list):
     def role_required(f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            if g.user_role not in roles:
+            if g.user.role.role_name not in roles:
                 return make_response(jsonify({"error": "Unauthorized User!!"}), 401)
             return f(*args, **kwargs)
 

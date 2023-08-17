@@ -1,7 +1,7 @@
 from functools import wraps
 
 import jwt
-from flask import current_app, g, jsonify, make_response, request, session
+from flask import g, jsonify, make_response, request, session
 from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 
 from main.modules.auth.model import User
@@ -37,7 +37,6 @@ def verify_token():
                 if not user:
                     return make_response(jsonify({"error": "User Not Found !!"}), 403)
                 g.user = user
-                g.user_role = jwt_identity["role"]
                 return f(*args, **kwargs)
             except jwt.ExpiredSignatureError:
                 return make_response(jsonify({"message": "Access token has expired"}), 401)

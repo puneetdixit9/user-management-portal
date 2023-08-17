@@ -228,18 +228,20 @@ class UserPermissions(Resource):
     method_decorators = [verify_token()]
 
     @staticmethod
-    def get():
-        return make_response(UserController.get_user_permissions())
+    def get(user_id: int = None):
+        return make_response(UserController.get_user_permissions(user_id))
 
     @staticmethod
     @allowed_roles(["admin"])
-    def post():
+    def post(user_id: int = None):
+        if not user_id:
+            raise PathNotFoundError(request.method)
         data = get_data_from_request_or_raise_validation_error(UserPermissionsSchema, request.json)
-        UserController.add_permissions_to_user(data)
+        UserController.add_permissions_to_user(user_id, data["permission_ids"])
         return make_response(jsonify(status="ok"))
 
 
-class Permission(Resource):
+class Permissions(Resource):
     method_decorators = [verify_token()]
 
     @staticmethod
@@ -268,5 +270,5 @@ auth_namespace.add_resource(VerifyToken, "/verify")
 auth_namespace.add_resource(User, "/user/<int:user_id>")
 auth_namespace.add_resource(ApproveUser, "/approve-user/<int:user_id>")
 auth_namespace.add_resource(UserAccounts, "/users")
-auth_namespace.add_resource(UserPermissions, "/user-permissions")
-auth_namespace.add_resource(Permission, "/permission")
+auth_namespace.add_resource(UserPermissions, "/user-permissions", "/user-permissions/<int:user_id>")
+auth_namespace.add_resource(Permissions, "/permissions")
