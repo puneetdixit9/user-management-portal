@@ -298,12 +298,18 @@ class UserController:
         return UserPermissions.filter(user_id=user_id, to_json=True)
 
     @classmethod
-    def add_permissions_to_user(cls, user_id: int, permissions_list: dict):
+    def add_permissions_to_user(cls, user_id: int, permissions_list: list):
         """
         To add permissions to the user.
         :param user_id:
         :param permissions_list:
         """
+        for permission in UserPermissions.filter(user_id=user_id):
+            if permission.permission_id not in permissions_list:
+                UserPermissions.delete(permission_id=permission.permission_id)
+            else:
+                permissions_list.remove(permission.permission_id)
+
         for permission_id in permissions_list:
             UserPermissions.create({"permission_id": permission_id, "user_id": user_id})
 
