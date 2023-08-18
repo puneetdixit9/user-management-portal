@@ -70,6 +70,8 @@ class UserPermissions(BaseModel):
     user_id = db.Column(db.BIGINT, ForeignKey("user.user_id"))
     permission_id = db.Column(db.BIGINT, ForeignKey("permission.permission_id"))
 
+    permission = db.relationship("Permission", backref=db.backref("user_permission", lazy=True))
+
 
 class UserRoleDeptMapping(BaseModel):
     """

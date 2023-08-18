@@ -295,7 +295,11 @@ class UserController:
         if not user_id:
             logged_in_user = cls.get_current_user_identity()
             user_id = logged_in_user["user_id"]
-        return UserPermissions.filter(user_id=user_id, to_json=True)
+        return [
+            user_pem.serialize()
+            | {"application": user_pem.permission.application, "permission": user_pem.permission.permission}
+            for user_pem in UserPermissions.filter(user_id=user_id)
+        ]
 
     @classmethod
     def add_permissions_to_user(cls, user_id: int, permissions_list: list):
