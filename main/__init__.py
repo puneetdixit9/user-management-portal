@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 
 from config import config_by_name
 from flask_session import Session
+from main import cli
 from main.cache import cache
 from main.db import db
 from main.exceptions import CUSTOM_EXCEPTIONS
@@ -37,6 +38,7 @@ def get_app(env=None, config=None):
     api.init_app(app)
     db.init_app(app)
     jwt.init_app(app)
+    cli.init_app(app)
     cache.init_app(app, config=config_by_name["cache"])
     Migrate(app, db)
 

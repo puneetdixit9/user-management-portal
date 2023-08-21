@@ -168,6 +168,14 @@ class RoleController:
         raise RecordNotFoundError(f"role_id '{role_id}' not found")
 
     @classmethod
+    def get_role_by_name(cls, role_name: str):
+        """
+        To get role by name.
+        :param role_name:
+        """
+        return Role.filter(role_name=role_name, only_first=True)
+
+    @classmethod
     def update_role(cls, role_id: int, data: dict):
         """
         To update role.

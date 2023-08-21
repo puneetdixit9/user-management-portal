@@ -1,19 +1,16 @@
-"""Initial Migration
+"""Initial Migrations
 
-Revision ID: 8dbb070a12a8
+Revision ID: 51220d9ae1d9
 Revises:
-Create Date: 2023-08-08 09:52:25.951783
+Create Date: 2023-08-21 14:39:42.348690
 
 """
-import os
-
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy import text
-from werkzeug.security import generate_password_hash
 
 # revision identifiers, used by Alembic.
-revision = "8dbb070a12a8"
+revision = "51220d9ae1d9"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -32,6 +29,17 @@ def upgrade():
         sa.Column("modified_by", sa.String(length=50), nullable=True),
         sa.PrimaryKeyConstraint("dept_id"),
         sa.UniqueConstraint("dept_name"),
+    )
+    op.create_table(
+        "permission",
+        sa.Column("permission_id", sa.BIGINT(), autoincrement=True, nullable=False),
+        sa.Column("permission", sa.String(length=100), nullable=True),
+        sa.Column("application", sa.String(length=100), nullable=True),
+        sa.Column("created_on", sa.DateTime(), server_default=sa.text("now()"), nullable=True),
+        sa.Column("created_by", sa.String(length=50), nullable=True),
+        sa.Column("modified_on", sa.DateTime(), nullable=True),
+        sa.Column("modified_by", sa.String(length=50), nullable=True),
+        sa.PrimaryKeyConstraint("permission_id"),
     )
     op.create_table(
         "role",
@@ -61,11 +69,10 @@ def upgrade():
         batch_op.create_index(batch_op.f("ix_token_block_list_jti"), ["jti"], unique=False)
 
     op.create_table(
-        "function_with_department",
+        "department_sub_function",
         sa.Column("func_id", sa.BIGINT(), autoincrement=True, nullable=False),
-        sa.Column("dept_id", sa.BIGINT(), nullable=True),
-        sa.Column("dept_name", sa.String(length=100), nullable=True),
-        sa.Column("sub_function", sa.String(length=100), nullable=True),
+        sa.Column("dept_id", sa.BIGINT(), nullable=False),
+        sa.Column("sub_function_name", sa.String(length=100), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=True),
         sa.Column("created_on", sa.DateTime(), server_default=sa.text("now()"), nullable=True),
         sa.Column("created_by", sa.String(length=50), nullable=True),
@@ -94,10 +101,12 @@ def upgrade():
         sa.Column("status_changed_on", sa.DateTime(), nullable=True),
         sa.Column("usage_count", sa.Integer(), nullable=True),
         sa.Column("last_login_on", sa.DateTime(), nullable=True),
-        sa.Column("func_id", sa.BIGINT(), nullable=True),
         sa.Column("approved", sa.Boolean(), nullable=True),
         sa.Column("approved_by", sa.String(length=100), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=True),
+        sa.Column("deactivated_by", sa.String(length=100), nullable=True),
+        sa.Column("deactivated_on", sa.DateTime(), nullable=True),
+        sa.Column("func_id", sa.BIGINT(), nullable=True),
         sa.Column("role_id", sa.BIGINT(), nullable=True),
         sa.Column("dept_id", sa.BIGINT(), nullable=True),
         sa.Column("created_on", sa.DateTime(), server_default=sa.text("now()"), nullable=True),
@@ -109,6 +118,10 @@ def upgrade():
             ["department.dept_id"],
         ),
         sa.ForeignKeyConstraint(
+            ["func_id"],
+            ["department_sub_function.func_id"],
+        ),
+        sa.ForeignKeyConstraint(
             ["role_id"],
             ["role.role_id"],
         ),
@@ -116,6 +129,25 @@ def upgrade():
         sa.UniqueConstraint("email"),
         sa.UniqueConstraint("employee_code"),
         sa.UniqueConstraint("username"),
+    )
+    op.create_table(
+        "user_permission",
+        sa.Column("user_permission_id", sa.BIGINT(), autoincrement=True, nullable=False),
+        sa.Column("user_id", sa.BIGINT(), nullable=True),
+        sa.Column("permission_id", sa.BIGINT(), nullable=True),
+        sa.Column("created_on", sa.DateTime(), server_default=sa.text("now()"), nullable=True),
+        sa.Column("created_by", sa.String(length=50), nullable=True),
+        sa.Column("modified_on", sa.DateTime(), nullable=True),
+        sa.Column("modified_by", sa.String(length=50), nullable=True),
+        sa.ForeignKeyConstraint(
+            ["permission_id"],
+            ["permission.permission_id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["user.user_id"],
+        ),
+        sa.PrimaryKeyConstraint("user_permission_id"),
     )
     op.create_table(
         "user_role_dept_mapping",
@@ -144,6 +176,7 @@ def upgrade():
         sa.PrimaryKeyConstraint("user_role_dept_mapping_id"),
     )
     # ### end Alembic commands ###
+
     # Create the 'admin' role
     op.execute(
         text(
@@ -151,29 +184,18 @@ def upgrade():
         )
     )
 
-    connection = op.get_bind()
-    result = connection.execute(text("SELECT role_id FROM role WHERE role_name = 'admin'"))
-    admin_role_id = result.scalar()
-
-    admin_password = generate_password_hash(os.environ.get("SECRET_KEY"))
-
-    op.execute(
-        text(
-            "INSERT INTO user (username, first_name, last_name, email, password, is_active, approved, approved_by, role_id, created_on, created_by) "
-            "VALUES ('admin', 'Admin', 'User', 'admin@example.com', :hashed_password_here, true, true, 'system', :role_id, now(), 'system')"
-        ).bindparams(hashed_password_here=admin_password, role_id=admin_role_id)
-    )
-
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table("user_role_dept_mapping")
+    op.drop_table("user_permission")
     op.drop_table("user")
-    op.drop_table("function_with_department")
+    op.drop_table("department_sub_function")
     with op.batch_alter_table("token_block_list", schema=None) as batch_op:
         batch_op.drop_index(batch_op.f("ix_token_block_list_jti"))
 
     op.drop_table("token_block_list")
     op.drop_table("role")
+    op.drop_table("permission")
     op.drop_table("department")
     # ### end Alembic commands ###
