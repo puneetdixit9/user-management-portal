@@ -41,7 +41,7 @@ class DepartmentController:
         To get all departments.
         :return:
         """
-        return Department.get_all()
+        return Department.get_all(to_json=True)
 
     @classmethod
     def get_dept_by_id(cls, dept_id: int) -> dict:
@@ -95,7 +95,7 @@ class PermissionController:
 
     @classmethod
     def get_permissions(cls):
-        return Permission.get_all()
+        return Permission.get_all(to_json=True)
 
 
 class DepartmentSubFunctionController:
@@ -123,7 +123,7 @@ class DepartmentSubFunctionController:
     @staticmethod
     def get_all_sub_functions():
         output = []
-        all_functions = DepartmentSubFunction.get_all()
+        all_functions = DepartmentSubFunction.get_all(to_json=True)
         for function in all_functions:
             output.append(function | {"dept_name": Department.get(function["dept_id"]).dept_name})
         return output
@@ -153,7 +153,7 @@ class RoleController:
         To get all roles
         :return:
         """
-        return Role.get_all()
+        return Role.get_all(to_json=True)
 
     @classmethod
     def get_role_by_id(cls, role_id: int):
@@ -270,6 +270,17 @@ class UserController:
         else:
             error["msg"] = "wrong password"
             error["code"] = 403
+        if not error:
+            application = login_data["application"]
+            if not user.is_admin:
+                user_permissions = UserPermissions.filter(user_id=user.user_id)
+                for permission in user_permissions:
+                    if permission.permission.application == application:
+                        return token, error
+                token = {}
+                error["msg"] = f"User not authorised for '{application}' application. Contact Admin"
+                error["code"] = 401
+
         return token, error
 
     @classmethod
@@ -301,12 +312,17 @@ class UserController:
         :param user_id:
         """
         if not user_id:
-            logged_in_user = cls.get_current_user_identity()
-            user_id = logged_in_user["user_id"]
+            user_id = g.user.user_id
         return [
             user_pem.serialize()
-            | {"application": user_pem.permission.application, "permission": user_pem.permission.permission}
-            for user_pem in UserPermissions.filter(user_id=user_id)
+            | {
+                "application": user_pem.permission.application,
+                "permission": user_pem.permission.permission,
+                "model": user_pem.permission.model,
+            }
+            for user_pem in (
+                UserPermissions.filter(user_id=user_id) if not g.user.is_admin else UserPermissions.get_all()
+            )
         ]
 
     @classmethod

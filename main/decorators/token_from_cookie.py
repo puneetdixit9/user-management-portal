@@ -23,7 +23,7 @@ def verify_token():
                 access_token_cookie = request.headers.get("Authorization")
 
             if not access_token_cookie:
-                return make_response(jsonify({"message": "Access token not found"}), 401)
+                return make_response(jsonify({"error": "Access token not found"}), 401)
 
             try:
                 # access_token = jwt.decode(
@@ -36,6 +36,8 @@ def verify_token():
                 user = User.filter(email=email, only_first=True)
                 if not user:
                     return make_response(jsonify({"error": "User Not Found !!"}), 403)
+                elif not user.is_active:
+                    return make_response(jsonify({"error": "Account is not active, Contact Admin."}), 401)
                 g.user = user
                 return f(*args, **kwargs)
             except jwt.ExpiredSignatureError:

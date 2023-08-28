@@ -46,6 +46,13 @@ class User(BaseModel):
         """
         return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name != "password"}
 
+    @property
+    def is_admin(self):
+        """
+        To check is user is Admin
+        """
+        return self.role.role_name == "admin"
+
 
 class Permission(BaseModel):
     """
@@ -55,8 +62,9 @@ class Permission(BaseModel):
     __tablename__ = "permission"
 
     permission_id = db.Column(db.BIGINT, primary_key=True, autoincrement=True)
-    permission = db.Column(db.String(100))
-    application = db.Column(db.String(100))
+    permission = db.Column(db.String(100), nullable=False)
+    application = db.Column(db.String(100), nullable=False)
+    model = db.Column(db.String(100))
 
 
 class UserPermissions(BaseModel):

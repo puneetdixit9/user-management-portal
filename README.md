@@ -42,6 +42,10 @@ $ flask db upgrade 'migration_version'
 ```commandline
 $ flask db downgrade 'migration_version'
 ```
+* Create Admin user from command line.
+```commandline
+$ flask create admin
+```
 * Run Server
 ```commandline
 $ flask run

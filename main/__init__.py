@@ -3,9 +3,9 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_session import Session
 
 from config import config_by_name
-from flask_session import Session
 from main import cli
 from main.cache import cache
 from main.db import db
@@ -27,12 +27,13 @@ def get_app(env=None, config=None):
         config = config_by_name[env]
 
     app.config.update(config)
-    CORS(
-        app,
-        supports_credentials=True,
-        send_cookie=True,
-        resources={r"/*": {"origins": config["ALLOWED_ORIGINS"].split(",")}},
-    )
+    # CORS(
+    #     app,
+    #     supports_credentials=True,
+    #     send_cookie=True,
+    #     resources={r"/*": {"origins": config["ALLOWED_ORIGINS"].split(",")}},
+    # )
+    CORS(app)
     # Session(app)
 
     api.init_app(app)

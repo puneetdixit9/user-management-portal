@@ -1,8 +1,8 @@
-"""Initial Migrations
+"""initial
 
-Revision ID: 51220d9ae1d9
+Revision ID: 98c29e4660b5
 Revises:
-Create Date: 2023-08-21 14:39:42.348690
+Create Date: 2023-08-25 18:06:11.248161
 
 """
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ from alembic import op
 from sqlalchemy import text
 
 # revision identifiers, used by Alembic.
-revision = "51220d9ae1d9"
+revision = "98c29e4660b5"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,8 +33,9 @@ def upgrade():
     op.create_table(
         "permission",
         sa.Column("permission_id", sa.BIGINT(), autoincrement=True, nullable=False),
-        sa.Column("permission", sa.String(length=100), nullable=True),
-        sa.Column("application", sa.String(length=100), nullable=True),
+        sa.Column("permission", sa.String(length=100), nullable=False),
+        sa.Column("application", sa.String(length=100), nullable=False),
+        sa.Column("model", sa.String(length=100), nullable=True),
         sa.Column("created_on", sa.DateTime(), server_default=sa.text("now()"), nullable=True),
         sa.Column("created_by", sa.String(length=50), nullable=True),
         sa.Column("modified_on", sa.DateTime(), nullable=True),

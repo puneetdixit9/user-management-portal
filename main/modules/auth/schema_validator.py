@@ -54,6 +54,7 @@ class LogInSchema(Schema):
     email = fields.Email()
     password = fields.String(required=True)
     username = fields.String()
+    application = fields.String(required=True)
 
     @validates_schema
     def validate_at_least_one(self, data, **kwargs):
@@ -95,6 +96,7 @@ class PermissionSchema(Schema):
 
     permission = fields.String(required=True)
     application = fields.String(required=True)
+    model = fields.String(required=False)
 
 
 class UserPermissionsSchema(Schema):

@@ -29,12 +29,12 @@ class BaseModel(db.Model):
         return record
 
     @classmethod
-    def get_all(cls) -> list:
+    def get_all(cls, to_json=False) -> list:
         """
         To get all records
         """
         records = cls.query.all()
-        return [record.serialize() for record in records]
+        return [record.serialize() for record in records] if to_json else records
 
     @classmethod
     def get(cls, _id, to_json=False) -> dict or None:
