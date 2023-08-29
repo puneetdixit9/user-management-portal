@@ -214,12 +214,22 @@ class UserController:
         error = ""
         user_id = None
         query = get_query_including_filters(
-            db, User, {"op_or": {"email": user_data["email"], "username": user_data["username"]}}
+            db,
+            User,
+            {
+                "op_or": {
+                    "email": user_data["email"],
+                    "username": user_data["username"],
+                    "employee_code": user_data["employee_code"],
+                }
+            },
         )
         user = query.first()
         if user:
             if user.email == user_data["email"]:
                 error = f"user already exists with email : '{user_data['email']}'"
+            elif user.email == user_data["employee_code"]:
+                error = f"user already exits with employee code : '{user_data['employee_code']}'"
             else:
                 error = f"user already exits with username : '{user_data['username']}'"
         else:
@@ -274,6 +284,8 @@ class UserController:
             application = login_data["application"]
             if not user.is_admin:
                 user_permissions = UserPermissions.filter(user_id=user.user_id)
+                if application == "ump":
+                    return token, error
                 for permission in user_permissions:
                     if permission.permission.application == application:
                         return token, error
@@ -306,13 +318,18 @@ class UserController:
         # TODO : add permissions of user in permission table.
 
     @classmethod
-    def get_user_permissions(cls, user_id: int = None) -> list:
+    def get_user_permissions(cls, input_user_id: int = None) -> list:
         """
         To get current logged-in user permissions.
-        :param user_id:
+        :param input_user_id:
         """
-        if not user_id:
-            user_id = g.user.user_id
+        if g.user.is_admin:
+            if input_user_id:
+                user_permissions = UserPermissions.filter(user_id=input_user_id)
+            else:
+                user_permissions = UserPermissions.get_all()
+        else:
+            user_permissions = UserPermissions.filter(user_id=g.user.user_id)
         return [
             user_pem.serialize()
             | {
@@ -320,9 +337,7 @@ class UserController:
                 "permission": user_pem.permission.permission,
                 "model": user_pem.permission.model,
             }
-            for user_pem in (
-                UserPermissions.filter(user_id=user_id) if not g.user.is_admin else UserPermissions.get_all()
-            )
+            for user_pem in user_permissions
         ]
 
     @classmethod

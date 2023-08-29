@@ -39,7 +39,7 @@ class SignUpSchema(UpdateUserSchema):
     password = fields.String(required=True, validate=Length(min=8))  # noqa
     first_name = fields.String(required=True)
     last_name = fields.String()
-    employee_code = fields.String()
+    employee_code = fields.String(required=True)
     manager_name = fields.String()
     dept_id = fields.Integer()
     role_id = fields.Integer()
