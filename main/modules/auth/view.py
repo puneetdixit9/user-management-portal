@@ -255,7 +255,7 @@ class Permissions(Resource):
         return make_response(jsonify(ids=ids, errors=errors), 201 if ids else 409)
 
 
-auth_namespace = Namespace("auth", description="Auth Operations")
+auth_namespace = Namespace("auth-api", description="Auth Operations")
 auth_namespace.add_resource(Departments, "/departments", "/departments/<int:dept_id>")
 auth_namespace.add_resource(DepartmentSubFunction, "/sub-function")
 auth_namespace.add_resource(Roles, "/roles")
