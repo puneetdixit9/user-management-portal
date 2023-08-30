@@ -12,7 +12,6 @@ from main.modules.auth.controller import (
     UserController,
 )
 from main.modules.auth.schema_validator import (
-    ApproveUserSchema,
     DepartmentSchema,
     DepartmentSubFunctionSchema,
     LogInSchema,
@@ -206,16 +205,6 @@ class User(Resource):
         return make_response(jsonify(status="ok"))
 
 
-class ApproveUser(Resource):
-    method_decorators = [allowed_roles(["admin"]), verify_token()]
-
-    @staticmethod
-    def post(user_id: int):
-        data = get_data_from_request_or_raise_validation_error(ApproveUserSchema, request.json)
-        UserController.approve_user_account(user_id, data)
-        return make_response(jsonify(status="ok"))
-
-
 class UserAccounts(Resource):
     method_decorators = [allowed_roles(["admin"]), verify_token()]
 
@@ -268,7 +257,6 @@ auth_namespace.add_resource(ChangePassword, "/change_password")
 auth_namespace.add_resource(Logout, "/logout")
 auth_namespace.add_resource(VerifyToken, "/verify")
 auth_namespace.add_resource(User, "/user/<int:user_id>")
-auth_namespace.add_resource(ApproveUser, "/approve-user/<int:user_id>")
 auth_namespace.add_resource(UserAccounts, "/users")
 auth_namespace.add_resource(UserPermissions, "/user-permissions", "/user-permissions/<int:user_id>")
 auth_namespace.add_resource(Permissions, "/permissions")

@@ -184,6 +184,12 @@ def upgrade():
             "INSERT INTO role (role_name, is_active, created_on, created_by) " "VALUES ('admin', true, now(), 'system')"
         )
     )
+    # Create the 'user' role
+    op.execute(
+        text(
+            "INSERT INTO role (role_name, is_active, created_on, created_by) " "VALUES ('user', true, now(), 'system')"
+        )
+    )
 
 
 def downgrade():

@@ -296,24 +296,23 @@ class UserController:
         return token, error
 
     @classmethod
-    def approve_user_account(cls, user_id: int, data: dict):
+    def approve_user_account(cls, user, data: dict):
         """
         To approve user account.
-        :param user_id:
+        :param user:
         :param data:
         :return:
         """
-        logged_in_user = cls.get_current_user_identity()
-        user = User.filter(user_id=user_id, only_first=True)
-        if not user:
-            raise RecordNotFoundError(f"User not found with user_id: {user_id}")
 
         if data.get("role_id") and not RoleController.get_role_by_id(data["role_id"]):
             raise CustomValidationError(f"Invalid role_id : {data['role_id']}")
 
+        if not user.role_id:
+            data["role_id"] = RoleController.get_role_by_name("user").role_id
+
         data["approved"] = True
-        data["approved_by"] = logged_in_user["email"]
-        data["modified_by"] = logged_in_user["email"]
+        data["approved_by"] = g.user.email
+        data["modified_by"] = g.user.email
         user.update(data)
         # TODO : add permissions of user in permission table.
 
@@ -408,12 +407,13 @@ class UserController:
         :param data:
         :return:
         """
-        user = User.get(user_id)
+        user = User.filter(user_id=user_id, only_first=True)
         if not user:
-            raise RecordNotFoundError
+            raise RecordNotFoundError(f"User not found with user_id: {user_id}")
 
         logged_in_user = cls.get_current_user_identity()
         if data.get("approved"):
+            cls.approve_user_account(user, data)
             data["approved_by"] = logged_in_user["email"]
 
         if "is_active" in data:

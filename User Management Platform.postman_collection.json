@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"dixit@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"first_name\": \"Puneet\",\r\n    \"last_name\": \"Dixit\"\r\n}",
+					"raw": "{\r\n    \"email\": \"test1@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"username\": \"test1\",\r\n    \"first_name\": \"Puneet\",\r\n    \"last_name\": \"Dixit\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -21,15 +21,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/signup",
+					"raw": "http://{{user_management_urll}}/auth/signup",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{user_management_urll}}"
 					],
-					"port": "10001",
 					"path": [
 						"auth",
 						"signup"
@@ -45,7 +41,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"dixit@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+					"raw": "{\r\n    \"password\": \"ee4c120c-e5ee-40cf-85ef-cc1505d936aa\",\r\n    \"username\": \"admin\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -53,15 +49,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/login",
+					"raw": "http://{{user_management_urll}}/auth/login",
 					"protocol": "http",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{user_management_urll}}"
 					],
-					"port": "10001",
 					"path": [
 						"auth",
 						"login"
@@ -79,7 +71,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/verify",
+					"raw": "http://127.0.0.1:5000/auth/verify",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -87,7 +79,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"verify"
@@ -100,7 +92,14 @@
 			"name": "Change password",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MDM0NTU3NCwianRpIjoiMjUzNzllMjMtNzhkYi00ZGM0LTk1MTMtODllNTY0NmIxNDRjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoiNjRjMDllMjNiM2JiYjNhOGZhM2YzMzBiIiwicm9sZSI6InN0YWZmIn0sIm5iZiI6MTY5MDM0NTU3NCwiZXhwIjoxNjkwNDMxOTc0fQ.C3KSNT-hY393VQOrlbFO4DAKpVEAqTgb4c6ju2P8xik",
+							"type": "string"
+						}
+					]
 				},
 				"method": "PUT",
 				"header": [
@@ -120,7 +119,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/change_password",
+					"raw": "http://127.0.0.1:5000/auth/change_password",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -128,7 +127,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"change_password"
@@ -153,7 +152,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/refresh",
+					"raw": "http://127.0.0.1:5000/auth/refresh",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -161,7 +160,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"refresh"
@@ -178,7 +177,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY4NjEzMjcxMCwianRpIjoiYWI4ZTE1YTUtYmY3My00MTU5LWJhN2QtODRlNGRiZTI4YzRkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJwdW5lZXRAZ21haWwuY29tIn0sIm5iZiI6MTY4NjEzMjcxMCwiZXhwIjoxNjg2MjE5MTEwfQ.BgeQRlNe2XTcVBiMdHHmvoFt0s_CjIxzl_3px_d3Dlc",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MDM0NTU3NCwianRpIjoiMjUzNzllMjMtNzhkYi00ZGM0LTk1MTMtODllNTY0NmIxNDRjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoiNjRjMDllMjNiM2JiYjNhOGZhM2YzMzBiIiwicm9sZSI6InN0YWZmIn0sIm5iZiI6MTY5MDM0NTU3NCwiZXhwIjoxNjkwNDMxOTc0fQ.C3KSNT-hY393VQOrlbFO4DAKpVEAqTgb4c6ju2P8xik",
 							"type": "string"
 						}
 					]
@@ -186,7 +185,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/logout",
+					"raw": "http://127.0.0.1:5000/auth/logout",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -194,7 +193,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"logout"
@@ -206,10 +205,20 @@
 		{
 			"name": "Get user details",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MjE2Njk1NiwianRpIjoiNjA5NDViNzgtZDEzOC00ZTY5LWE3MzEtYzE4MTM5YzNkY2QxIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoyLCJyb2xlIjoidXNlciIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20ifSwibmJmIjoxNjkyMTY2OTU2LCJleHAiOjE2OTk4NDY5NTZ9.Zv82AlvJpupX7E4CELk0O0LQWkm3ecSzGEYE2_czL1Y",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/user/1",
+					"raw": "http://127.0.0.1:5000/auth/user/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -217,7 +226,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"user",
@@ -242,7 +251,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/user/1",
+					"raw": "http://127.0.0.1:5000/auth/user/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -250,7 +259,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"user",
@@ -263,6 +272,16 @@
 		{
 			"name": "Add Departments",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ump_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -275,7 +294,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/departments",
+					"raw": "http://127.0.0.1:5000/auth/departments",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -283,7 +302,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"departments"
@@ -295,10 +314,20 @@
 		{
 			"name": "Get Departments",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MTgzMzMzMiwianRpIjoiYjY0ZmZiMmEtOTA2NC00YTRlLWIzOTUtY2JmMzc1Y2JmZThmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkxODMzMzMyLCJleHAiOjE2OTk1MTMzMzJ9.xJ1U5eZxttF5yC8MbjkRAmzEbqhTNCa6HL-pm5NcHXc",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/departments",
+					"raw": "http://127.0.0.1:5000/auth/departments",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -306,7 +335,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"departments"
@@ -318,10 +347,20 @@
 		{
 			"name": "Get Department by Id",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MTgzMzMzMiwianRpIjoiYjY0ZmZiMmEtOTA2NC00YTRlLWIzOTUtY2JmMzc1Y2JmZThmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkxODMzMzMyLCJleHAiOjE2OTk1MTMzMzJ9.xJ1U5eZxttF5yC8MbjkRAmzEbqhTNCa6HL-pm5NcHXc",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/department/2",
+					"raw": "http://127.0.0.1:5000/auth/departments/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -329,11 +368,11 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
-						"department",
-						"2"
+						"departments",
+						"1"
 					]
 				}
 			},
@@ -342,6 +381,16 @@
 		{
 			"name": "Update department",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MTgzMzMzMiwianRpIjoiYjY0ZmZiMmEtOTA2NC00YTRlLWIzOTUtY2JmMzc1Y2JmZThmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkxODMzMzMyLCJleHAiOjE2OTk1MTMzMzJ9.xJ1U5eZxttF5yC8MbjkRAmzEbqhTNCa6HL-pm5NcHXc",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [],
 				"body": {
@@ -354,7 +403,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/department/1",
+					"raw": "http://127.0.0.1:5000/auth/departments",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -362,11 +411,10 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
-						"department",
-						"1"
+						"departments"
 					]
 				}
 			},
@@ -375,10 +423,20 @@
 		{
 			"name": "Delete Department",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MTgzMzMzMiwianRpIjoiYjY0ZmZiMmEtOTA2NC00YTRlLWIzOTUtY2JmMzc1Y2JmZThmIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkxODMzMzMyLCJleHAiOjE2OTk1MTMzMzJ9.xJ1U5eZxttF5yC8MbjkRAmzEbqhTNCa6HL-pm5NcHXc",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/department/2",
+					"raw": "http://127.0.0.1:5000/auth/departments/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -386,11 +444,11 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
-						"department",
-						"2"
+						"departments",
+						"1"
 					]
 				}
 			},
@@ -399,11 +457,21 @@
 		{
 			"name": "Add Roles",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ump_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\r\n    {\r\n        \"role_name\": \"Admin\"\r\n    },\r\n    {\r\n        \"role_name\": \"User\"\r\n    }\r\n]",
+					"raw": "[\r\n    {\r\n        \"role_name\": \"User\"\r\n    }\r\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -411,7 +479,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/roles",
+					"raw": "http://127.0.0.1:5000/auth/roles",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -419,7 +487,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"roles"
@@ -434,7 +502,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/roles",
+					"raw": "http://127.0.0.1:5000/auth/roles",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -442,7 +510,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"roles"
@@ -457,7 +525,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/role/1",
+					"raw": "http://127.0.0.1:5000/auth/role/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -465,7 +533,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"role",
@@ -490,7 +558,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/role/1",
+					"raw": "http://127.0.0.1:5000/auth/role/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -498,7 +566,7 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"role",
@@ -514,7 +582,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://127.0.0.1:10001/auth/role/2",
+					"raw": "http://127.0.0.1:5000/auth/role/2",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -522,10 +590,242 @@
 						"0",
 						"1"
 					],
-					"port": "10001",
+					"port": "5000",
 					"path": [
 						"auth",
 						"role",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Pending User Approvals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:5000/auth/pending-users",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"pending-users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Sub Functions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ump_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"dept_id\": 1,\r\n        \"sub_function_name\": \"Test Sub Function\"\r\n    },\r\n    {\r\n        \"dept_id\": 1,\r\n        \"sub_function_name\": \"Test Sub Function 2\"\r\n    },\r\n    {\r\n        \"dept_id\": 1,\r\n        \"sub_function_name\": \"Test Sub Function 3\"\r\n    },\r\n    {\r\n        \"dept_id\": 2,\r\n        \"sub_function_name\": \"Test Sub Function 4\"\r\n    },\r\n    {\r\n        \"dept_id\": 2,\r\n        \"sub_function_name\": \"Test Sub Function 5\"\r\n    },\r\n    {\r\n        \"dept_id\": 2,\r\n        \"sub_function_name\": \"Test Sub Function 6\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:5000/auth/sub-function",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"sub-function"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sub Sunctions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MTgzNzA5MywianRpIjoiNDE4NDU1NGItMjQ5Ny00YmFmLWFkMmMtMGZkYmFhYTE3NTg0IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkxODM3MDkzLCJleHAiOjE2OTk1MTcwOTN9.8t5wgBFz27Vz1l2O-3gsFG-sq1w2Tb_kOKTGorrTSi8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:5000/auth/sub-function",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"auth",
+						"sub-function"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add permissions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MjE2NDY5MCwianRpIjoiODJlM2QxYjAtOGY3MC00NzFjLTlmMTItMmMwNTM5ZmUyZWFjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkyMTY0NjkwLCJleHAiOjE2OTk4NDQ2OTB9.Yo4uQQabVWAShxuG3B9lLPUI_2NVV5LgOP5G1wrNk6c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"application\": \"ump\",\r\n        \"permission\": \"/\"\r\n    },\r\n    {\r\n        \"application\": \"ump\",\r\n        \"permission\": \"/profile/:userId\"\r\n    },\r\n    {\r\n        \"application\": \"pal\",\r\n        \"permission\": \"/\"\r\n    },\r\n    {\r\n        \"application\": \"pal-api\",\r\n        \"permission\": \"create\",\r\n        \"model\": \"Product\"\r\n    },\r\n    {\r\n        \"application\": \"pal-api\",\r\n        \"permission\": \"update\",\r\n        \"model\": \"Product\"\r\n    },\r\n    {\r\n        \"application\": \"pal-api\",\r\n        \"permission\": \"read\",\r\n        \"model\": \"Product\"\r\n    },\r\n    {\r\n        \"application\": \"pal-api\",\r\n        \"permission\": \"read\",\r\n        \"model\": \"AttributeConfig\"\r\n    },\r\n    {\r\n        \"application\": \"pal-api\",\r\n        \"permission\": \"update\",\r\n        \"model\": \"AttributeConfig\"\r\n    },\r\n    {\r\n        \"application\": \"pal-api\",\r\n        \"permission\": \"create\",\r\n        \"model\": \"AttributeConfig\"\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{user_management_urll}}/auth/permissions",
+					"protocol": "http",
+					"host": [
+						"{{user_management_urll}}"
+					],
+					"path": [
+						"auth",
+						"permissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Permissions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MjE2NDY5MCwianRpIjoiODJlM2QxYjAtOGY3MC00NzFjLTlmMTItMmMwNTM5ZmUyZWFjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkyMTY0NjkwLCJleHAiOjE2OTk4NDQ2OTB9.Yo4uQQabVWAShxuG3B9lLPUI_2NVV5LgOP5G1wrNk6c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{user_management_urll}}/auth/permission",
+					"protocol": "http",
+					"host": [
+						"{{user_management_urll}}"
+					],
+					"path": [
+						"auth",
+						"permission"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user permissions",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MjE2NDY5MCwianRpIjoiODJlM2QxYjAtOGY3MC00NzFjLTlmMTItMmMwNTM5ZmUyZWFjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkyMTY0NjkwLCJleHAiOjE2OTk4NDQ2OTB9.Yo4uQQabVWAShxuG3B9lLPUI_2NVV5LgOP5G1wrNk6c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{user_management_urll}}/auth/permissions",
+					"protocol": "http",
+					"host": [
+						"{{user_management_urll}}"
+					],
+					"path": [
+						"auth",
+						"permissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add permissions to user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY5MjE2NDY5MCwianRpIjoiODJlM2QxYjAtOGY3MC00NzFjLTlmMTItMmMwNTM5ZmUyZWFjIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1c2VyX2lkIjoxLCJyb2xlIjoiIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifSwibmJmIjoxNjkyMTY0NjkwLCJleHAiOjE2OTk4NDQ2OTB9.Yo4uQQabVWAShxuG3B9lLPUI_2NVV5LgOP5G1wrNk6c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"permission_ids\": [4]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{user_management_urll}}/auth/user-permissions/2",
+					"protocol": "http",
+					"host": [
+						"{{user_management_urll}}"
+					],
+					"path": [
+						"auth",
+						"user-permissions",
 						"2"
 					]
 				}

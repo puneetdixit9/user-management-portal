@@ -71,15 +71,6 @@ class UpdatePassword(Schema):
     new_password = fields.String(required=True, validate=Length(min=8))  # noqa
 
 
-class ApproveUserSchema(Schema):
-    """
-    Required schema to approve user
-    """
-
-    role_id = fields.Integer()
-    dept_id = fields.Integer()
-
-
 class DepartmentSubFunctionSchema(Schema):
     """
     Required schema to approve user
