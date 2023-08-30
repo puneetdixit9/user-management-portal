@@ -1,4 +1,5 @@
 import os
+import urllib
 from datetime import timedelta
 
 import yaml
@@ -6,7 +7,6 @@ from dotenv import load_dotenv
 from yaml.loader import Loader
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
 
 dotenv_path = os.path.join(os.path.dirname(basedir), ".env")
 load_dotenv(dotenv_path)
@@ -38,8 +38,14 @@ def serialize(cls):
     }
 
 
+password = os.environ["PASSWORD"]
+encoded_password = urllib.parse.quote_plus(password)
+
+
 class Config:
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    SQLALCHEMY_DATABASE_URI = (
+        f"mysql+mysqlconnector://{os.environ['USERNAME']}:{encoded_password}@{os.environ['HOST']}/{os.environ['DB']}"
+    )
     JWT_SECRET_KEY = os.environ.get("SECRET_KEY")
     JWT_ACCESS_TOKEN_EXPIRES = config.get("JWT_ACCESS_TOKEN_EXPIRES")
     JWT_REFRESH_TOKEN_EXPIRES = config.get("JWT_REFRESH_TOKEN_EXPIRES")
