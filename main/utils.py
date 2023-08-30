@@ -74,7 +74,7 @@ class FiltersDataSchema(Schema):
         fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False  # noqa
     )
     nin = fields.Dict(
-        fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False
+        fields.String(), fields.List(fields.Field(validate=validate_not_dict_list_tuple)), required=False  # noqa
     )  # noqa
     null = fields.List(fields.String(), required=False)  # noqa
     not_null = fields.List(fields.String(), required=False)  # noqa

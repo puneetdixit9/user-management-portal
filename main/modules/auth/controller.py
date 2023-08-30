@@ -228,7 +228,7 @@ class UserController:
         if user:
             if user.email == user_data["email"]:
                 error = f"user already exists with email : '{user_data['email']}'"
-            elif user.email == user_data["employee_code"]:
+            elif user.employee_code == user_data["employee_code"]:
                 error = f"user already exits with employee code : '{user_data['employee_code']}'"
             else:
                 error = f"user already exits with username : '{user_data['username']}'"
