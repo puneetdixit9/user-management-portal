@@ -19,6 +19,7 @@ def create_admin():
         email = input("Enter admin's email: ")
         username = input("Enter admin's username: ")
         password = input("Enter admin's password: ")
+        employee_code = input("Enter admin's employee code: ")
 
         user_data = {
             "password": password,
@@ -27,6 +28,7 @@ def create_admin():
             "approved": True,
             "approved_by": "system",
             "role_id": admin_role.role_id,
+            "employee_code": employee_code,
         }
         user_id, error = UserController.create_user(user_data)
         if user_id:

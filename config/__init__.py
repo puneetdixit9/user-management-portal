@@ -44,7 +44,7 @@ encoded_password = urllib.parse.quote_plus(password)
 
 class Config:
     SQLALCHEMY_DATABASE_URI = (
-        f"mysql+mysqlconnector://{os.environ['USERNAME']}:{encoded_password}@{os.environ['HOST']}/{os.environ['DB']}"
+        f"mysql+mysqlconnector://{os.environ['USERNAME1']}:{encoded_password}@{os.environ['HOST']}/{os.environ['DB']}"
     )
     JWT_SECRET_KEY = os.environ.get("SECRET_KEY")
     JWT_ACCESS_TOKEN_EXPIRES = config.get("JWT_ACCESS_TOKEN_EXPIRES")
